@@ -1,3 +1,9 @@
+# datamods 1.1.2
+
+* Fixed a bug when retrieving data from package with parenthesis in name.
+* Fixed test on R-oldrel
+
+
 # datamods 1.1.0
 
 * Added internationalization to translate labels used in modules, see corresponding vignette.
