@@ -64,7 +64,7 @@ filter_data_ui <- function(id,
 #' @importFrom shiny observeEvent reactiveValues removeUI
 #'  insertUI reactive req isolate reactive renderUI tags outputOptions
 filter_data_server <- function(id,
-                               data = reactive(),
+                               data = reactive(NULL),
                                vars = reactive(NULL),
                                name = reactive("data"),
                                drop_ids = TRUE,
@@ -170,6 +170,8 @@ create_filters <- function(data,
                            width = "100%",
                            session = getDefaultReactiveDomain()) {
   data <- as.data.frame(data)
+  if (ncol(data) < 1)
+    return(NULL)
   widget_char <- match.arg(widget_char)
   widget_num <- match.arg(widget_num)
   widget_date <- match.arg(widget_date)

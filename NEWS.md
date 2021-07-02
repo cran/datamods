@@ -1,3 +1,10 @@
+# datamods 1.1.5
+
+* `import_*_server()` added reset argument to clear the data.
+* `import_copypaste_server()` also return a `reactive` function "name" like the others.
+* New function `i18n()` to add internationalization in shiny apps.
+
+
 # datamods 1.1.4
 
 * `filter_data_server`: convert data to `data.frame` (fix [esquisse #149](https://github.com/dreamRs/esquisse/issues/149)).
