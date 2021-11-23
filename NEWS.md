@@ -1,3 +1,15 @@
+# datamods 1.2.0
+
+* Switch to [{phosphoricons}](https://github.com/dreamRs/phosphoricons) for icons.
+* `import_file_ui()` has a new argument `file_extensions` to select the files that the user can import.
+* `import_file_server()` has a new argument `read_fns` to define custom function(s) to read data.
+
+### Translations
+* i18n: :macedonia: macedonian translations added, thanks to [@novica](https://github.com/novica).
+* i18n: :albania: albanian translations added, thanks to [@novica](https://github.com/novica).
+* i18n: :portugal: :brazil: brazilian portuguese translations added, thanks to [@gabrielteotonio](https://github.com/gabrielteotonio).
+
+
 # datamods 1.1.5
 
 * `import_*_server()` added reset argument to clear the data.

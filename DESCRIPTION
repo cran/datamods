@@ -1,6 +1,6 @@
 Package: datamods
 Title: Modules to Import and Manipulate Data in 'Shiny'
-Version: 1.1.5
+Version: 1.2.0
 Authors@R: 
     c(person(given = "Victor",
              family = "Perrier",
@@ -19,16 +19,16 @@ License: GPL-3
 URL: https://github.com/dreamRs/datamods
 BugReports: https://github.com/dreamRs/datamods/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
-Imports: htmltools, shiny (>= 1.5.0), shinyWidgets (>= 0.5.3), DT,
-        data.table, readxl, rio, rlang, tibble, tools
-Suggests: testthat, knitr, MASS, rmarkdown, validate
+RoxygenNote: 7.1.2
+Imports: data.table, DT, htmltools, phosphoricons, readxl, rio, rlang,
+        shiny (>= 1.5.0), shinyWidgets (>= 0.5.3), tibble, tools
+Suggests: jsonlite, knitr, MASS, rmarkdown, testthat, validate
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-07-02 09:20:05 UTC; perri
+Packaged: 2021-11-23 17:28:02 UTC; perri
 Author: Victor Perrier [aut, cre, cph],
   Fanny Meyer [aut],
   Zauad Shahreer Abeer [aut]
 Maintainer: Victor Perrier <victor.perrier@dreamrs.fr>
 Repository: CRAN
-Date/Publication: 2021-07-02 09:40:05 UTC
+Date/Publication: 2021-11-23 19:30:07 UTC

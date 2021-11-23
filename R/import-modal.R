@@ -10,14 +10,14 @@
 #'
 #' @return
 #'  * UI: HTML tags that can be included in shiny's UI
-#'  * Server: a \code{list} with two slots:
-#'    + **data**: a \code{reactive} function returning the imported \code{data.frame}.
-#'    + **name**: a \code{reactive} function returning the name of the imported data as \code{character} (if applicable).
+#'  * Server: a `list` with two slots:
+#'    + **data**: a `reactive` function returning the imported `data.frame`.
+#'    + **name**: a `reactive` function returning the name of the imported data as `character` (if applicable).
 #'
 #' @export
 #' @name import-modal
 #'
-#' @importFrom shiny NS tabsetPanel tabPanel icon fluidRow column
+#' @importFrom shiny NS tabsetPanel tabPanel tabPanelBody icon fluidRow column
 #' @importFrom htmltools tags HTML
 #' @importFrom shinyWidgets radioGroupButtons
 #' @importFrom DT DTOutput
@@ -29,38 +29,34 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
   from <- match.arg(from, several.ok = TRUE)
 
   env <- if ("env" %in% from) {
-    tabPanel(
-      title = "env",
+    tabPanelBody(
+      value = "env",
       tags$br(),
-      import_globalenv_ui(id = ns("env"), title = NULL),
-      icon = icon("code")
+      import_globalenv_ui(id = ns("env"), title = NULL)
     )
   }
 
   file <- if ("file" %in% from) {
-    tabPanel(
-      title = "file",
+    tabPanelBody(
+      value = "file",
       tags$br(),
-      import_file_ui(id = ns("file"), title = NULL),
-      icon = icon("file-import")
+      import_file_ui(id = ns("file"), title = NULL)
     )
   }
 
   copypaste <- if ("copypaste" %in% from) {
-    tabPanel(
-      title = "copypaste",
+    tabPanelBody(
+      value = "copypaste",
       tags$br(),
-      import_copypaste_ui(id = ns("copypaste"), title = NULL),
-      icon = icon("copy")
+      import_copypaste_ui(id = ns("copypaste"), title = NULL)
     )
   }
 
   googlesheets <- if ("googlesheets" %in% from) {
-    tabPanel(
-      title = "googlesheets",
+    tabPanelBody(
+      value = "googlesheets",
       tags$br(),
-      import_googlesheets_ui(id = ns("googlesheets"), title = NULL),
-      icon = icon("cloud-download")
+      import_googlesheets_ui(id = ns("googlesheets"), title = NULL)
     )
   }
 
@@ -73,10 +69,10 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
     "googlesheets" = i18n("Googlesheets")
   )
   iconsImport <- list(
-    "env" = icon("code"),
-    "file" = icon("file-import"),
-    "copypaste" = icon("copy"),
-    "googlesheets" = icon("cloud-download")
+    "env" = phosphoricons::ph("code", title = labsImport$env),
+    "file" = phosphoricons::ph("file-arrow-down", title = labsImport$file),
+    "copypaste" = phosphoricons::ph("clipboard-text", title = labsImport$copypaste),
+    "googlesheets" = phosphoricons::ph("cloud-arrow-down", title = labsImport$googlesheets)
   )
 
 
@@ -133,24 +129,36 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
       type = "tabs",
       id = ns("tabs-mode"),
       tabPanel(
-        title = i18n("Import"),
+        title = tagList(
+          phosphoricons::ph("download-simple", title = i18n("Import")),
+          i18n("Import")
+        ),
         value = "import",
         importTab
       ),
       tabPanel(
-        title = i18n("View"),
+        title = tagList(
+          phosphoricons::ph("table", title = i18n("View")),
+          i18n("View")
+        ),
         value = "view",
         tags$br(),
         DTOutput(outputId = ns("view"))
       ),
       tabPanel(
-        title = i18n("Update"),
+        title = tagList(
+          phosphoricons::ph("gear-six", title = i18n("Update")),
+          i18n("Update")
+        ),
         value = "update",
         tags$br(),
         update_variables_ui(id = ns("update"), title = NULL)
       ),
       tabPanel(
-        title = i18n("Validate"),
+        title = tagList(
+          phosphoricons::ph("shield-check", title = i18n("Validate")),
+          i18n("Validate")
+        ),
         value = "validate",
         tags$br(),
         validation_ui(
@@ -180,16 +188,17 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
 }
 
 
-#' @param validation_opts \code{list} of arguments passed to \code{\link{validation_server}}.
+#' @param validation_opts `list` of arguments passed to [validation_server().
 #' @param allowed_status Vector of statuses allowed to confirm dataset imported,
-#'  if you want that all validation rules are successful before importing data use \code{allowed_status = "OK"}.
-#' @param return_class Class of returned data: \code{data.frame}, \code{data.table} or \code{tbl_df} (tibble).
+#'  if you want that all validation rules are successful before importing data use `allowed_status = "OK"`.
+#' @param return_class Class of returned data: `data.frame`, `data.table` or `tbl_df` (tibble).
 #'
 #' @export
 #' @rdname import-modal
 #' @importFrom shiny moduleServer reactiveValues observeEvent
 #'  reactive removeModal updateTabsetPanel hideTab observe
 #' @importFrom DT tableHeader datatable renderDT
+#' @importFrom rlang %||%
 import_server <- function(id,
                           validation_opts = NULL,
                           allowed_status = c("OK", "Failed", "Error"),
@@ -273,8 +282,7 @@ import_server <- function(id,
             toggle_widget(inputId = "confirm", enable = TRUE)
           } else {
             status <- validation_results$status()
-            req(status)
-            if (status %in% allowed_status) {
+            if (isTRUE(status %in% allowed_status)) {
               toggle_widget(inputId = "confirm", enable = TRUE)
             } else {
               toggle_widget(inputId = "confirm", enable = FALSE)
@@ -340,9 +348,7 @@ import_server <- function(id,
         req(status)
         if (status %in% c("Error", "Failed")) {
           update_tab_label("tabs-mode", "validate", tagList(
-            tags$span(
-              style = "color: firebrick;", icon("exclamation-circle")
-            ), i18n("Validate")
+            phosphoricons::ph("warning-circle", weight = "fill", fill = "firebrick"), i18n("Validate")
           ))
         } else {
           update_tab_label("tabs-mode", "validate", i18n("Validate"))
@@ -379,15 +385,16 @@ import_server <- function(id,
 #' @export
 #' @rdname import-modal
 #' @importFrom shiny modalDialog showModal
+#' @importFrom htmltools tags css
 import_modal <- function(id, from, title = "Import data", size = "l") {
   showModal(modalDialog(
     title = tagList(
       tags$button(
-        icon("close"),
-        class = "btn btn-default pull-right",
-        style = "border: 0 none;",
+        phosphoricons::ph("x", title = i18n("Close"), height = "2em"),
+        class = "btn btn-link",
+        style = css(border = "0 none", position = "absolute", top = "5px", right = "5px"),
         `data-dismiss` = "modal",
-        `aria-label` = "Close"
+        `aria-label` = i18n("Close")
       ),
       title
     ),

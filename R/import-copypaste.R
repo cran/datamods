@@ -3,9 +3,7 @@
 #'
 #' @description Let the user copy data from Excel or text file then paste it into a text area to import it.
 #'
-#' @param id Module's ID.
-#' @param title Module's title, if \code{TRUE} use the default title,
-#'  use \code{NULL} for no title or a \code{shiny.tag} for a custom one.
+#' @inheritParams import-globalenv
 #'
 #' @eval doc_return_import()
 #'
@@ -13,10 +11,10 @@
 #'
 #' @name import-copypaste
 #'
-#' @importFrom shiny NS icon textAreaInput actionButton
+#' @importFrom shiny NS icon textAreaInput actionButton textInput
 #' @importFrom htmltools tags tagAppendAttributes
 #'
-#' @example examples/copypaste.R
+#' @example examples/from-copypaste.R
 import_copypaste_ui <- function(id, title = TRUE) {
 
   ns <- NS(id)
@@ -42,6 +40,12 @@ import_copypaste_ui <- function(id, title = TRUE) {
       ),
       class = "shiny-input-container-inline"
     ),
+    textInput(
+      inputId = ns("name"),
+      label = NULL,
+      placeholder = i18n("Add a label to data"),
+      width = "100%"
+    ),
     tags$div(
       id = ns("import-placeholder"),
       alert(
@@ -60,12 +64,7 @@ import_copypaste_ui <- function(id, title = TRUE) {
 }
 
 
-#' @param btn_show_data Display or not a button to display data in a modal window if import is successful.
-#' @param trigger_return When to update selected data:
-#'  \code{"button"} (when user click on button) or
-#'  \code{"change"} (each time user select a dataset in the list).
-#' @param return_class Class of returned data: \code{data.frame}, \code{data.table} or \code{tbl_df} (tibble).
-#' @param reset A `reactive` function that when triggered resets the data.
+#' @inheritParams import_globalenv_server
 #'
 #' @export
 #'
@@ -73,6 +72,7 @@ import_copypaste_ui <- function(id, title = TRUE) {
 #' @importFrom data.table fread
 #' @importFrom shiny reactiveValues observeEvent removeUI reactive
 #' @importFrom htmltools tags tagList
+#' @importFrom rlang %||%
 #'
 #' @rdname import-copypaste
 import_copypaste_server <- function(id,
@@ -110,6 +110,7 @@ import_copypaste_server <- function(id,
         insert_error()
         temporary_rv$status <- "error"
         temporary_rv$data <- NULL
+        temporary_rv$name <- NULL
       } else {
         toggle_widget(inputId = "confirm", enable = TRUE)
         insert_alert(
@@ -126,25 +127,34 @@ import_copypaste_server <- function(id,
       }
     }, ignoreInit = TRUE)
 
+    observeEvent(input$name, {
+      temporary_rv$name <- if (isTruthy(input$name)) {
+        input$name
+      } else {
+        "clipboard_data"
+      }
+    })
+
     observeEvent(input$see_data, {
       show_data(temporary_rv$data, title = i18n("Imported data"))
     })
 
     observeEvent(input$confirm, {
       imported_rv$data <- temporary_rv$data
+      imported_rv$name <- temporary_rv$name
     })
 
 
     if (identical(trigger_return, "button")) {
       return(list(
         status = reactive(temporary_rv$status),
-        name = reactive("clipboard_data"),
+        name = reactive(imported_rv$name),
         data = reactive(as_out(imported_rv$data, return_class))
       ))
     } else {
       return(list(
         status = reactive(temporary_rv$status),
-        name = reactive("clipboard_data"),
+        name = reactive(temporary_rv$name),
         data = reactive(as_out(temporary_rv$data, return_class))
       ))
     }

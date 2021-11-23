@@ -60,7 +60,7 @@ filter_data_ui <- function(id,
 #' @rdname filter-data
 #' @export
 #'
-#' @importFrom rlang eval_tidy
+#' @importFrom rlang eval_tidy %||%
 #' @importFrom shiny observeEvent reactiveValues removeUI
 #'  insertUI reactive req isolate reactive renderUI tags outputOptions
 filter_data_server <- function(id,
@@ -127,13 +127,13 @@ filter_data_server <- function(id,
           filters = filter_inputs,
           filters_na = filter_nas,
           data = data,
-          data_name = isolate(name())
+          data_name = isolate(name()) %||% "data"
         )
         rv_code$expr <- filters$expr
         rv_code$dplyr <- filters$expr_dplyr
         if (length(rv_code$expr) > 0) {
           result <- eval_tidy(expr = rv_code$expr, data = data)
-          data[result, ]
+          data[result, , drop = FALSE]
         } else {
           data
         }
@@ -277,7 +277,9 @@ create_filters <- function(data,
         }
       } else {
         values <- unique(as.character(var))
-        values <- tryCatch(values[trimws(values) != ""], error = function(e){
+        if ("" %in% values)
+          values <- append(values, "<empty field>")
+        values <- tryCatch(values[trimws(values) != ""], error = function(e) {
           Encoding(values[!validEnc(values)]) <- "unknown"
           values
         })
@@ -410,6 +412,8 @@ make_expr_filter <- function(filters, filters_na, data, data_name) {
         }
       } else {
         data_values <- unique(as.character(data_values))
+        if ("<empty field>" %in% values)
+          values[which(values == "<empty field>")] <- ""
         if (!identical(sort(values), sort(data_values))) {
           if (length(values) == 0) {
             if (isTRUE(nas)) {

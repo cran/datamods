@@ -5,14 +5,23 @@
 <!-- badges: start -->
 [![version](http://www.r-pkg.org/badges/version/datamods)](https://CRAN.R-project.org/package=datamods)
 [![R build status](https://github.com/dreamRs/datamods/workflows/R-CMD-check/badge.svg)](https://github.com/dreamRs/datamods/actions)
-[![codecov](https://codecov.io/gh/dreamRs/datamods/branch/master/graphs/badge.svg)](https://codecov.io/gh/dreamRs/datamods)
+[![codecov](https://app.codecov.io/gh/dreamRs/datamods/branch/master/graphs/badge.svg)](https://app.codecov.io/gh/dreamRs/datamods)
 <!-- badges: end -->
 
 
-## Overview
+### Overview
 
 This package provides custom shiny modules to import data from various sources, select, rename and convert variables in a dataset and validate content with [validate](https://github.com/data-cleaning/validate) package.  
 The modules can be used in any standard shiny application or RStudio add-in.
+
+
+### Internationalization
+
+Currently you can use {datamods} in the following language: <img src="man/figures/i18n/gb.svg" height="16"/> english (default), <img src="man/figures/i18n/fr.svg" height="16"/> french, <img src="man/figures/i18n/mk.svg" height="16"/> macedonian, <img src="man/figures/i18n/br.svg" height="16"/> <img src="man/figures/i18n/pt.svg" height="16"/> brazilian portuguese, <img src="man/figures/i18n/al.svg" height="16"/> albanian.
+
+If you want another language to be supported, you can submit a Pull Request to add a CSV file like the one used for french (file is located in `inst/i18n` folder in the package, you can see it [here on GitHub](https://github.com/dreamRs/datamods/blob/master/inst/i18n/fr.csv)).
+
+See the [online vignette](https://dreamrs.github.io/datamods/articles/i18n.html) for more on this topic.
 
 
 ### Installation
