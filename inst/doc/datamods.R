@@ -37,6 +37,13 @@ knitr::opts_chunk$set(
 #  imported <- import_googlesheets_server("myid")
 
 ## -----------------------------------------------------------------------------
+#  # UI
+#  import_url_ui("myid")
+#  
+#  # Server
+#  imported <- import_url_server("myid")
+
+## -----------------------------------------------------------------------------
 #  library(shiny)
 #  library(datamods)
 #  

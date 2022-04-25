@@ -1,18 +1,13 @@
 
-
-#' @title Get all import functions in a Modal
+#' @title Import from all sources
 #'
-#' @description Let the user choose a method of his choice to import data
+#' @description Wrap all import modules into one, can be displayed inline or in a modal window..
 #'
 #' @param id Module's id
 #' @param from The import_ui & server to use, i.e. the method.
-#'   There are 4 options to choose from. ("env", "file", "copypaste", "googlesheets")
+#'   There are 5 options to choose from. ("env", "file", "copypaste", "googlesheets", "url")
 #'
-#' @return
-#'  * UI: HTML tags that can be included in shiny's UI
-#'  * Server: a `list` with two slots:
-#'    + **data**: a `reactive` function returning the imported `data.frame`.
-#'    + **name**: a `reactive` function returning the name of the imported data as `character` (if applicable).
+#' @template module-import
 #'
 #' @export
 #' @name import-modal
@@ -20,11 +15,10 @@
 #' @importFrom shiny NS tabsetPanel tabPanel tabPanelBody icon fluidRow column
 #' @importFrom htmltools tags HTML
 #' @importFrom shinyWidgets radioGroupButtons
-#' @importFrom DT DTOutput
 #'
 #' @example examples/modal.R
 #'
-import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) {
+import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets", "url")) {
   ns <- NS(id)
   from <- match.arg(from, several.ok = TRUE)
 
@@ -60,19 +54,29 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
     )
   }
 
+  url <- if ("url" %in% from) {
+    tabPanelBody(
+      value = "url",
+      tags$br(),
+      import_url_ui(id = ns("url"), title = NULL)
+    )
+  }
+
   #database <- if("database" %in% from) tabPanel("Database", import_database_ui(ns("database")))
 
   labsImport <- list(
     "env" = i18n("Environment"),
     "file" = i18n("External file"),
     "copypaste" = i18n("Copy / Paste"),
-    "googlesheets" = i18n("Googlesheets")
+    "googlesheets" = i18n("Googlesheets"),
+    "url" = i18n("URL")
   )
   iconsImport <- list(
     "env" = phosphoricons::ph("code", title = labsImport$env),
     "file" = phosphoricons::ph("file-arrow-down", title = labsImport$file),
     "copypaste" = phosphoricons::ph("clipboard-text", title = labsImport$copypaste),
-    "googlesheets" = phosphoricons::ph("cloud-arrow-down", title = labsImport$googlesheets)
+    "googlesheets" = phosphoricons::ph("cloud-arrow-down", title = labsImport$googlesheets),
+    "url" = phosphoricons::ph("link", title = labsImport$url)
   )
 
 
@@ -82,11 +86,12 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
       "env" = import_globalenv_ui(id = ns("env")),
       "file" = import_file_ui(id = ns("file")),
       "copypaste" = import_copypaste_ui(id = ns("copypaste")),
-      "googlesheets" = import_googlesheets_ui(id = ns("googlesheets"))
+      "googlesheets" = import_googlesheets_ui(id = ns("googlesheets")),
+      "url" = import_url_ui(id = ns("url")),
     )
   } else {
     tabsetPanelArgs <- dropNulls(list(
-      env, file, copypaste, googlesheets,
+      env, file, copypaste, googlesheets, url,
       id = ns("tabs-import"),
       type = "hidden"
     ))
@@ -143,7 +148,7 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
         ),
         value = "view",
         tags$br(),
-        DTOutput(outputId = ns("view"))
+        reactable::reactableOutput(outputId = ns("view"))
       ),
       tabPanel(
         title = tagList(
@@ -197,7 +202,6 @@ import_ui <- function(id, from = c("env", "file", "copypaste", "googlesheets")) 
 #' @rdname import-modal
 #' @importFrom shiny moduleServer reactiveValues observeEvent
 #'  reactive removeModal updateTabsetPanel hideTab observe
-#' @importFrom DT tableHeader datatable renderDT
 #' @importFrom rlang %||%
 import_server <- function(id,
                           validation_opts = NULL,
@@ -253,6 +257,12 @@ import_server <- function(id,
         btn_show_data = FALSE,
         reset = reactive(input$hidden)
       )
+      from_url <- import_url_server(
+        id = "url",
+        trigger_return = "change",
+        btn_show_data = FALSE,
+        reset = reactive(input$hidden)
+      )
       #from_database <- import_database_server("database")
 
       observeEvent(from_env$data(), {
@@ -270,6 +280,10 @@ import_server <- function(id,
       observeEvent(from_googlesheets$data(), {
         data_rv$data <- from_googlesheets$data()
         data_rv$name <- from_googlesheets$name()
+      })
+      observeEvent(from_url$data(), {
+        data_rv$data <- from_url$data()
+        data_rv$name <- from_url$name()
       })
       # observeEvent(from_database$data(), {
       #   data_rv$data <- from_database$data()
@@ -296,31 +310,24 @@ import_server <- function(id,
         }
       })
 
-      output$view <- renderDT({
-        req(data_rv$data)
-        data <- data_rv$data
-        classes <- get_classes(data)
-        classes <- sprintf("<span style='font-style: italic; font-weight: normal; font-size: small;'>%s</span>", classes)
-        container <- tags$table(
-          tableHeader(paste(names(data), classes, sep = "<br>"), escape = FALSE)
-        )
-        datatable(
-          data = data,
-          rownames = FALSE,
-          selection = "none",
-          class = "display dt-responsive cell-border compact",
-          style = "bootstrap",
-          width = "100%",
-          container = container,
-          options = list(
-            scrollX = TRUE,
-            searching = FALSE,
-            lengthChange = FALSE,
-            pageLength = min(c(10, nrow(data_rv$data))),
-            columnDefs = list(
-              list(targets = "_all", className = "datamods-dt-nowrap")
-            )
-          )
+      output$view <- reactable::renderReactable({
+        data <- req(data_rv$data)
+        reactable::reactable(
+          data,
+          defaultColDef = reactable::colDef(
+            header = function(value) {
+              print(value)
+              classes <- tags$div(
+                style = "font-style: italic; font-weight: normal; font-size: small;",
+                get_classes(data[, value, drop = FALSE])
+              )
+              tags$div(title = value, value, classes)
+            }
+          ),
+          columns = list(),
+          bordered = TRUE,
+          compact = TRUE,
+          striped = TRUE
         )
       })
 
@@ -394,6 +401,7 @@ import_modal <- function(id, from, title = "Import data", size = "l") {
         class = "btn btn-link",
         style = css(border = "0 none", position = "absolute", top = "5px", right = "5px"),
         `data-dismiss` = "modal",
+        `data-bs-dismiss` = "modal",
         `aria-label` = i18n("Close")
       ),
       title

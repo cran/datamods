@@ -9,7 +9,7 @@
 #' @param title Module's title, if `TRUE` use the default title,
 #'  use `NULL` for no title or a `shiny.tag` for a custom one.
 #'
-#' @eval doc_return_import()
+#' @template module-import
 #'
 #' @export
 #'
@@ -92,6 +92,7 @@ import_globalenv_ui <- function(id,
 
 
 #' @param btn_show_data Display or not a button to display data in a modal window if import is successful.
+#' @param show_data_in Where to display data: in a `"popup"` or in a `"modal"` window.
 #' @param trigger_return When to update selected data:
 #'  `"button"` (when user click on button) or
 #'  `"change"` (each time user select a dataset in the list).
@@ -107,6 +108,7 @@ import_globalenv_ui <- function(id,
 #' @rdname import-globalenv
 import_globalenv_server <- function(id,
                                     btn_show_data = TRUE,
+                                    show_data_in = c("popup", "modal"),
                                     trigger_return = c("button", "change"),
                                     return_class = c("data.frame", "data.table", "tbl_df"),
                                     reset = reactive(NULL)) {
@@ -182,7 +184,7 @@ import_globalenv_server <- function(id,
 
         if (inherits(imported, "try-error") || NROW(imported) < 1) {
           toggle_widget(inputId = "confirm", enable = FALSE)
-          insert_error()
+          insert_error(mssg = i18n(attr(imported, "condition")$message))
           temporary_rv$status <- "error"
           temporary_rv$data <- NULL
           temporary_rv$name <- NULL
@@ -213,7 +215,7 @@ import_globalenv_server <- function(id,
 
 
     observeEvent(input$see_data, {
-      show_data(temporary_rv$data, title = i18n("Imported data"))
+      show_data(temporary_rv$data, title = i18n("Imported data"), type = show_data_in)
     })
 
     observeEvent(input$confirm, {

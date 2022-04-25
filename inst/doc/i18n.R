@@ -10,28 +10,37 @@ knitr::opts_chunk$set(
 
 ## -----------------------------------------------------------------------------
 #  # Using a supported language
-#  options("datamods.i18n" = "fr")
+#  set_i18n("fr")
 #  
 #  # Using a named list
-#  options("datamods.i18n" = list(...))
+#  set_i18n(list("Some label" = "Its translation", ...))
 #  
-#  # Using a data.frame
-#  options("datamods.i18n" = data.frame(label = c(...), translation = c(...)))
+#  # Using a data.framewith 2 columns
+#  set_i18n(data.frame(label = c(...), translation = c(...)))
 #  
 #  # Using a CSV file
-#  options("datamods.i18n" = "path/to/file.csv")
+#  set_i18n("path/to/file.csv")
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = "fr")
+#  set_i18n("fr")
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = "mk")
+#  set_i18n("mk")
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = "pt")
+#  set_i18n("pt")
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = "sq")
+#  set_i18n("al")
+
+## -----------------------------------------------------------------------------
+#  set_i18n("cn")
+
+## -----------------------------------------------------------------------------
+#  set_i18n("es")
+
+## -----------------------------------------------------------------------------
+#  set_i18n("de")
 
 ## -----------------------------------------------------------------------------
 #  options("datamods.i18n" = list(
@@ -41,13 +50,13 @@ knitr::opts_chunk$set(
 #  ))
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = data.frame(
+#  set_i18n(data.frame(
 #    label = c("Import a dataset from an environment", "Select a data.frame:", ...),
 #    translation = c("Importer un jeu de données depuis l'environnement global", "Sélectionner un data.frame :", ...)
 #  ))
 
 ## -----------------------------------------------------------------------------
-#  options("datamods.i18n" = "path/to/file.csv")
+#  set_i18n("path/to/file.csv")
 
 ## ---- echo=FALSE, eval=TRUE, comment=""---------------------------------------
 cat(readLines(system.file("i18n", "fr.csv", package = "datamods"), encoding = "UTF-8"), sep = '\n')

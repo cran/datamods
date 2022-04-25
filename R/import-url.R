@@ -1,27 +1,24 @@
-
-#' @title Import data from Googlesheet
+#' @title Import data from a URL
 #'
-#' @description Let user paste link to a Google sheet then import the data.
+#' @description Let user paste link to a JSON then import the data.
 #'
 #' @inheritParams import-globalenv
 #'
 #' @template module-import
 #'
 #' @export
-#' @name import-googlesheets
+#' @name import-url
 #'
-#' @importFrom shiny NS actionLink
-#' @importFrom shinyWidgets textInputIcon
-#' @importFrom htmltools tags tagList
+#' @importFrom htmltools tags
 #'
-#' @example examples/from-googlesheets.R
-import_googlesheets_ui <- function(id, title = TRUE) {
+#' @example examples/from-url.R
+import_url_ui <- function(id, title = TRUE) {
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   if (isTRUE(title)) {
     title <- tags$h4(
-      i18n("Import Google Spreadsheet"),
+      i18n("Import Url"),
       class = "datamods-title"
     )
   }
@@ -30,23 +27,9 @@ import_googlesheets_ui <- function(id, title = TRUE) {
     class = "datamods-import",
     html_dependency_datamods(),
     title,
-    tags$div(
-      class = "pull-right float-right",
-      help_popup(tagList(
-        i18n("You can either use:"),
-        tags$ul(
-          tags$li(
-            i18n("A shareable link, in that case first sheet will be read")
-          ),
-          tags$li(
-            i18n("The URL that appear in your browser, in that case the current sheet will be read")
-          )
-        )
-      ))
-    ),
-    textInputIcon(
+    shinyWidgets::textInputIcon(
       inputId = ns("link"),
-      label = i18n("Enter a shareable link to a GoogleSheet:"),
+      label = i18n("Enter URL to data:"),
       icon = phosphoricons::ph("link"),
       width = "100%"
     ),
@@ -56,17 +39,21 @@ import_googlesheets_ui <- function(id, title = TRUE) {
         id = ns("import-result"),
         status = "info",
         tags$b(i18n("Nothing pasted yet!")),
-        i18n("Please paste a valid GoogleSheet link in the dialog box above."),
+        i18n("Please paste a valid link in the dialog box above."),
+        i18n("You can import from flat table format supported by"),
+        tags$a(
+          href = "https://CRAN.R-project.org/package=rio/vignettes/rio.html#Supported_file_formats",
+          "package rio"
+        ),
         dismissible = TRUE
       )
     ),
-    uiOutput(
+    shiny::uiOutput(
       outputId = ns("container_confirm_btn"),
       style = "margin-top: 20px;"
     )
   )
 }
-
 
 #' @inheritParams import_globalenv_server
 #'
@@ -76,13 +63,13 @@ import_googlesheets_ui <- function(id, title = TRUE) {
 #' @importFrom shiny reactiveValues observeEvent removeUI reactive req
 #' @importFrom htmltools tags tagList
 #'
-#' @rdname import-googlesheets
-import_googlesheets_server <- function(id,
-                                       btn_show_data = TRUE,
-                                       show_data_in = c("popup", "modal"),
-                                       trigger_return = c("button", "change"),
-                                       return_class = c("data.frame", "data.table", "tbl_df"),
-                                       reset = reactive(NULL)) {
+#' @rdname import-url
+import_url_server <- function(id,
+                              btn_show_data = TRUE,
+                              show_data_in = c("popup", "modal"),
+                              trigger_return = c("button", "change"),
+                              return_class = c("data.frame", "data.table", "tbl_df"),
+                              reset = reactive(NULL)) {
 
   trigger_return <- match.arg(trigger_return)
 
@@ -112,12 +99,16 @@ import_googlesheets_server <- function(id,
 
     observeEvent(input$link, {
       req(input$link)
-      imported <- try(read_gsheet(input$link), silent = TRUE)
+
+      imported <- try(rio::import(input$link), silent = TRUE)
+
       if (inherits(imported, "try-error") || NROW(imported) < 1) {
         toggle_widget(inputId = "confirm", enable = FALSE)
+        # pass error message to UI
         insert_error(mssg = i18n(attr(imported, "condition")$message))
         temporary_rv$status <- "error"
         temporary_rv$data <- NULL
+        temporary_rv$name <- NULL
       } else {
         toggle_widget(inputId = "confirm", enable = TRUE)
         insert_alert(
@@ -131,6 +122,7 @@ import_googlesheets_server <- function(id,
         )
         temporary_rv$status <- "success"
         temporary_rv$data <- imported
+        temporary_rv$name <- basename(input$link)
       }
     }, ignoreInit = TRUE)
 
@@ -140,6 +132,7 @@ import_googlesheets_server <- function(id,
 
     observeEvent(input$confirm, {
       imported_rv$data <- temporary_rv$data
+      imported_rv$name <- temporary_rv$name
     })
 
     if (identical(trigger_return, "button")) {
@@ -161,40 +154,5 @@ import_googlesheets_server <- function(id,
     id = id,
     module = module
   )
-}
-
-
-
-# Utils -------------------------------------------------------------------
-
-get_id <- function(x) {
-  if (grepl("/d/", x)) {
-    x <- strsplit(x = x, split = "/")
-    x <- unlist(x)
-    x[which(x == "d") + 1]
-  } else if (grepl("id=", x)) {
-    x <- regmatches(x, gregexpr("id=[[:alnum:]_-]+", x))
-    gsub("^id=", "", x[[1]])
-  } else {
-    stop("Failed to retrieve Googlesheet ID")
-  }
-}
-
-#' @importFrom data.table fread .SD
-#' @importFrom utils type.convert
-read_gsheet <- function(url, dec = NULL) {
-  url_ <- sprintf(
-    "https://docs.google.com/spreadsheets/export?id=%s&format=csv",
-    get_id(url)
-  )
-  if (grepl("gid=", url)) {
-    gid <- regmatches(url, gregexpr("gid=[0-9]+", url))
-    url_ <- paste0(url_, "&", gid[[1]])
-  }
-  dt <- fread(input = url_)
-  if (!is.null(dec)) {
-    dt <- dt[, lapply(.SD, type.convert, dec = dec)]
-  }
-  return(dt)
 }
 
