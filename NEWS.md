@@ -1,3 +1,10 @@
+# datamods 1.3.4
+
+* i18n: korean translations added, thanks to [@ChangwooLim](https://github.com/ChangwooLim) (migrated from esquisse package).
+* `import_ui()` / `import_modal()`: added `file_extensions` argument passed to `import_file_ui()` (fix [#51](https://github.com/dreamRs/datamods/issues/51)).
+
+
+
 # datamods 1.3.3
 
 * i18n: turkish translations added, thanks to [@sbalci](https://github.com/sbalci).

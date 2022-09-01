@@ -43,6 +43,12 @@ knitr::opts_chunk$set(
 #  set_i18n("de")
 
 ## -----------------------------------------------------------------------------
+#  set_i18n("tr")
+
+## -----------------------------------------------------------------------------
+#  set_i18n("kr")
+
+## -----------------------------------------------------------------------------
 #  options("datamods.i18n" = list(
 #    "Import a dataset from an environment" = "Importer un jeu de données depuis l'environnement global",
 #    "Select a data.frame:" = "Sélectionner un data.frame :",
