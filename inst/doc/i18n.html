@@ -120,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -496,7 +503,31 @@ the package:</p>
 &quot;Number of rows:&quot;,&quot;Nombre de lignes :&quot;
 &quot;No data to display.&quot;,&quot;Pas de données à afficher.&quot;
 &quot;Close&quot;,&quot;Fermer&quot;
-&quot;Add a label to data&quot;,&quot;Ajouter un libellé aux données&quot;</code></pre>
+&quot;Add a label to data&quot;,&quot;Ajouter un libellé aux données&quot;
+&quot;URL&quot;,&quot;URL&quot;
+&quot;Add a row&quot;,&quot;Ajouter une ligne&quot;
+&quot;Required field&quot;,&quot;Champs requis&quot;
+&quot;Please fill in the required fields&quot;,&quot;Merci de remplir les champs obligatoires&quot;
+&quot;Unable to add the row, contact the platform administrator&quot;,&quot;Impossible d&#39;ajouter la ligne, contactez l&#39;administrateur de la plateforme&quot;
+&quot;Registered&quot;,&quot;Enregistré&quot;
+&quot;Row has been saved&quot;,&quot;La ligne a été enregistrée&quot;
+&quot;Update row&quot;,&quot;Mettre à jour la ligne&quot;
+&quot;Unable to modify the item, contact the platform administrator&quot;,&quot;Impossible de modifier l&#39;élément, contactez l&#39;administrateur de la plateforme&quot;
+&quot;Item has been modified&quot;,&quot;L&#39;élément a été modifié&quot;
+&quot;Delete&quot;,&quot;Effacer&quot;
+&quot;Do you want to delete the selected row ?&quot;,&quot;Voulez-vous supprimer la ligne sélectionnée ?&quot;
+&quot;Unable to delete the row, contact platform administrator&quot;,&quot;Impossible de supprimer la ligne, contactez l&#39;administrateur de la plateforme&quot;
+&quot;The row has been deleted&quot;,&quot;La ligne a été supprimée&quot;
+&quot;Information&quot;,&quot;Informations&quot;
+&quot;Row was not deleted&quot;,&quot;La ligne n&#39;a pas été supprimée&quot;
+&quot;Validate the entry&quot;,&quot;Valider la saisie&quot;
+&quot;Click to edit&quot;,&quot;Cliquez pour modifier&quot;
+&quot;Click to delete&quot;,&quot;Cliquez pour supprimer&quot;
+&quot;Cancel&quot;,&quot;Annuler&quot;
+&quot;No&quot;,&quot;Non&quot;
+&quot;Yes&quot;,&quot;Oui&quot;
+&quot;Edit data&quot;,&quot;Modifier les données&quot;
+&quot;Select&quot;, &quot;Sélectionner&quot;</code></pre>
 </div>
 
 

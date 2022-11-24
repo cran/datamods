@@ -1,3 +1,8 @@
+`%||%` <- function(x, y) {
+  if (is.null(x))
+    y
+  else x
+}
 
 dropNulls <- function(x) {
   x[!vapply(x, is.null, FUN.VALUE = logical(1))]
@@ -73,10 +78,12 @@ search_obj <- function(what = "data.frame", env = globalenv()) {
 
 #' @importFrom data.table as.data.table
 #' @importFrom tibble as_tibble
-as_out <- function(x, return_class = c("data.frame", "data.table", "tbl_df")) {
+as_out <- function(x, return_class = c("data.frame", "data.table", "tbl_df", "raw")) {
   if (is.null(x))
     return(NULL)
   return_class <- match.arg(return_class)
+  if (identical(return_class, "raw"))
+    return(x)
   is_sf <- inherits(x, "sf")
   x <- if (identical(return_class, "data.frame")) {
     as.data.frame(x)
@@ -107,3 +114,20 @@ makeId <- function(x) {
 }
 
 
+`%inT%` <- function(x, table) {
+  if (!is.null(table) && ! "" %in% table) {
+    x %in% table
+  } else {
+    rep_len(TRUE, length(x))
+  }
+}
+
+
+
+`%inF%` <- function(x, table) {
+  if (!is.null(table) && ! "" %in% table) {
+    x %in% table
+  } else {
+    rep_len(FALSE, length(x))
+  }
+}

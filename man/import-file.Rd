@@ -19,7 +19,7 @@ import_file_server(
   btn_show_data = TRUE,
   show_data_in = c("popup", "modal"),
   trigger_return = c("button", "change"),
-  return_class = c("data.frame", "data.table", "tbl_df"),
+  return_class = c("data.frame", "data.table", "tbl_df", "raw"),
   reset = reactive(NULL),
   read_fns = list()
 )
@@ -42,18 +42,20 @@ use \code{NULL} for no title or a \code{shiny.tag} for a custom one.}
 \code{"button"} (when user click on button) or
 \code{"change"} (each time user select a dataset in the list).}
 
-\item{return_class}{Class of returned data: \code{data.frame}, \code{data.table} or \code{tbl_df} (tibble).}
+\item{return_class}{Class of returned data: \code{data.frame}, \code{data.table}, \code{tbl_df} (tibble) or \code{raw}.}
 
 \item{reset}{A \code{reactive} function that when triggered resets the data.}
 
 \item{read_fns}{Named list with custom function(s) to read data:
 \itemize{
 \item the name must be the extension of the files to which the function will be applied
-\item the value must be a function that can have 4 arguments, passed by user through the interface:
+\item the value must be a function that can have 5 arguments (you can ignore some of them, but you have to use the same names),
+passed by user through the interface:
 \itemize{
 \item \code{file}: path to the file
 \item \code{sheet}: for Excel files, sheet to read
 \item \code{skip}: number of row to skip
+\item \code{dec}: decimal separator
 \item \code{encoding}: file encoding
 }
 }}

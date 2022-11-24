@@ -1,3 +1,10 @@
+# datamods 1.4.0
+
+* New module : `edit_data_ui()` / `edit_data_server()` to interactively edit a `data.frame`, thanks to [@ggsamra](https://github.com/ggsamra).
+* New module : `sample_ui()` / `sample_server()` to take a sample from a table, thanks to [@ggsamra](https://github.com/ggsamra).
+
+
+
 # datamods 1.3.4
 
 * i18n: korean translations added, thanks to [@ChangwooLim](https://github.com/ChangwooLim) (migrated from esquisse package).

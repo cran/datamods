@@ -134,3 +134,10 @@ knitr::opts_chunk$set(
 #    label_na = "Missing"
 #  )
 
+## -----------------------------------------------------------------------------
+#  # UI
+#  sample_ui("myID")
+#  
+#  # Server
+#  result_sample <- sample_server("myID", reactive(iris))
+

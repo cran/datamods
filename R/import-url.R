@@ -68,10 +68,11 @@ import_url_server <- function(id,
                               btn_show_data = TRUE,
                               show_data_in = c("popup", "modal"),
                               trigger_return = c("button", "change"),
-                              return_class = c("data.frame", "data.table", "tbl_df"),
+                              return_class = c("data.frame", "data.table", "tbl_df", "raw"),
                               reset = reactive(NULL)) {
 
   trigger_return <- match.arg(trigger_return)
+  return_class <- match.arg(return_class)
 
   module <- function(input, output, session) {
 
@@ -101,6 +102,8 @@ import_url_server <- function(id,
       req(input$link)
 
       imported <- try(rio::import(input$link), silent = TRUE)
+      if (inherits(imported, "try-error")) # retry with explicit json format
+        imported <- try(rio::import(input$link, format = "json"), silent = TRUE)
 
       if (inherits(imported, "try-error") || NROW(imported) < 1) {
         toggle_widget(inputId = "confirm", enable = FALSE)

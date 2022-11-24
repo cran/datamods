@@ -121,10 +121,12 @@ import_file_ui <- function(id,
 #' @inheritParams import_globalenv_server
 #' @param read_fns Named list with custom function(s) to read data:
 #'  * the name must be the extension of the files to which the function will be applied
-#'  * the value must be a function that can have 4 arguments, passed by user through the interface:
+#'  * the value must be a function that can have 5 arguments (you can ignore some of them, but you have to use the same names),
+#'    passed by user through the interface:
 #'    + `file`: path to the file
 #'    + `sheet`: for Excel files, sheet to read
 #'    + `skip`: number of row to skip
+#'    + `dec`: decimal separator
 #'    + `encoding`: file encoding
 #'
 #' @export
@@ -144,7 +146,7 @@ import_file_server <- function(id,
                                btn_show_data = TRUE,
                                show_data_in = c("popup", "modal"),
                                trigger_return = c("button", "change"),
-                               return_class = c("data.frame", "data.table", "tbl_df"),
+                               return_class = c("data.frame", "data.table", "tbl_df", "raw"),
                                reset = reactive(NULL),
                                read_fns = list()) {
 
@@ -156,6 +158,7 @@ import_file_server <- function(id,
   }
 
   trigger_return <- match.arg(trigger_return)
+  return_class <- match.arg(return_class)
 
   module <- function(input, output, session) {
 
