@@ -141,3 +141,21 @@ knitr::opts_chunk$set(
 #  # Server
 #  result_sample <- sample_server("myID", reactive(iris))
 
+## -----------------------------------------------------------------------------
+#  # UI
+#  edit_data_ui(id = "id")
+#  
+#  # Server
+#    res_edited <- edit_data_server(
+#      id = "id",
+#      data_r = reactive(demo_edit),
+#      add = TRUE,
+#      update = TRUE,
+#      delete = TRUE,
+#      download_csv = TRUE,
+#      download_excel = TRUE,
+#      file_name_export = "datas",
+#      var_edit = c("name", "job", "credit_card_provider", "credit_card_security_code"),
+#      var_mandatory = c("name", "job")
+#    )
+
