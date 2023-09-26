@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -49,6 +49,12 @@ knitr::opts_chunk$set(
 #  set_i18n("kr")
 
 ## -----------------------------------------------------------------------------
+#  set_i18n("pl")
+
+## -----------------------------------------------------------------------------
+#  set_i18n("ja")
+
+## -----------------------------------------------------------------------------
 #  options("datamods.i18n" = list(
 #    "Import a dataset from an environment" = "Importer un jeu de données depuis l'environnement global",
 #    "Select a data.frame:" = "Sélectionner un data.frame :",
@@ -64,6 +70,6 @@ knitr::opts_chunk$set(
 ## -----------------------------------------------------------------------------
 #  set_i18n("path/to/file.csv")
 
-## ---- echo=FALSE, eval=TRUE, comment=""---------------------------------------
+## ----echo=FALSE, eval=TRUE, comment=""----------------------------------------
 cat(readLines(system.file("i18n", "fr.csv", package = "datamods"), encoding = "UTF-8"), sep = '\n')
 

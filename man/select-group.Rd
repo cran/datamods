@@ -10,7 +10,7 @@ select_group_ui(
   id,
   params,
   label = NULL,
-  btn_label = "Reset filters",
+  btn_reset_label = "Reset filters",
   inline = TRUE,
   vs_args = list()
 )
@@ -30,7 +30,7 @@ you can use :
 
 \item{label}{Character, global label on top of all labels.}
 
-\item{btn_label}{Character, reset button label.}
+\item{btn_reset_label}{Character, reset button label. If \code{NULL} no button is added.}
 
 \item{inline}{If \code{TRUE} (the default),
 select menus are horizontally positioned, otherwise vertically.}
@@ -45,7 +45,7 @@ must correspond to variables listed in \code{params}. Can be a
 \code{\link[shiny:reactive]{shiny::reactive()}} function, but values must be included in the initial ones (in \code{params}).}
 }
 \value{
-A \code{\link[shiny:reactive]{shiny::reactive()}} function containing data filtered.
+A \code{\link[shiny:reactive]{shiny::reactive()}} function containing data filtered with an attribute \code{inputs} containing a named list of selected inputs.
 }
 \description{
 Group of mutually dependent select menus for filtering \code{data.frame}'s columns (like in Excel).
@@ -76,7 +76,9 @@ ui <- fluidPage(
         ),
         status = "primary"
       ),
-      reactable::reactableOutput(outputId = "table")
+      reactable::reactableOutput(outputId = "table"),
+      tags$b("Inputs values:"),
+      verbatimTextOutput("inputs")
     )
   )
 )
@@ -87,8 +89,13 @@ server <- function(input, output, session) {
     data = reactive(MASS::Cars93),
     vars = reactive(c("Manufacturer", "Type", "AirBags", "DriveTrain"))
   )
+
   output$table <- reactable::renderReactable({
     reactable::reactable(res_mod())
+  })
+
+  output$inputs <- renderPrint({
+    attr(res_mod(), "inputs")
   })
 }
 
