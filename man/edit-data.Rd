@@ -19,7 +19,17 @@ edit_data_server(
   file_name_export = "data",
   var_edit = NULL,
   var_mandatory = NULL,
-  return_class = c("data.frame", "data.table", "tbl_df", "raw")
+  var_labels = NULL,
+  n_column = 1,
+  return_class = c("data.frame", "data.table", "tbl_df", "raw"),
+  reactable_options = NULL,
+  modal_size = c("m", "s", "l", "xl"),
+  modal_easy_close = TRUE,
+  callback_add = NULL,
+  callback_update = NULL,
+  callback_delete = NULL,
+  only_callback = FALSE,
+  use_notify = TRUE
 )
 }
 \arguments{
@@ -27,23 +37,46 @@ edit_data_server(
 
 \item{data_r}{data_r \code{reactive} function containing a \code{data.frame} to use in the module.}
 
-\item{add}{\code{boolean}, if \code{TRUE}, allows you to add a row in the table via a button at the top right}
+\item{add}{\code{boolean}, if \code{TRUE}, allows you to add a row in the table via a button at the top right.}
 
-\item{update}{\code{boolean}, if \code{TRUE}, allows you to modify a row of the table via a button located in the table on the row you want to edit}
+\item{update}{\code{boolean}, if \code{TRUE}, allows you to modify a row of the table via a button located in the table on the row you want to edit.}
 
-\item{delete}{\code{boolean}, if \code{TRUE}, allows a row to be deleted from the table via a button in the table}
+\item{delete}{\code{boolean}, if \code{TRUE}, allows a row to be deleted from the table via a button in the table.}
 
-\item{download_csv}{if \code{TRUE}, allows to export the table in csv format via a download button}
+\item{download_csv}{if \code{TRUE}, allows to export the table in csv format via a download button.}
 
-\item{download_excel}{if \code{TRUE}, allows to export the table in excel format via a download button}
+\item{download_excel}{if \code{TRUE}, allows to export the table in excel format via a download button.}
 
-\item{file_name_export}{\code{character} that allows you to choose the export name of the downloaded file}
+\item{file_name_export}{\code{character} that allows you to choose the export name of the downloaded file.}
 
-\item{var_edit}{vector of \code{character} which allows to choose the names of the editable columns}
+\item{var_edit}{vector of \code{character} which allows to choose the names of the editable columns.}
 
-\item{var_mandatory}{vector of \code{character} which allows to choose obligatory fields to fill}
+\item{var_mandatory}{vector of \code{character} which allows to choose obligatory fields to fill.}
+
+\item{var_labels}{named list, where names are colnames and values are labels to be used in edit modal.}
+
+\item{n_column}{Number of column in the edit modal window, must be a number that divide 12 since it use Bootstrap grid system with \code{\link[shiny:column]{shiny::column()}}.}
 
 \item{return_class}{Class of returned data: \code{data.frame}, \code{data.table}, \code{tbl_df} (tibble) or \code{raw}.}
+
+\item{reactable_options}{Options passed to \code{\link[reactable:reactable]{reactable::reactable()}}.}
+
+\item{modal_size}{\code{character} which allows to choose the size of the modalDialog. One of "s" for small, "m" (the default) for medium, "l" for large, or "xl" for extra large.}
+
+\item{modal_easy_close}{\code{boolean} If TRUE, modalDialog can be dismissed by clicking outside the dialog box, or be pressing the Escape key. If FALSE (the default), modalDialog can't be dismissed in those ways; instead it must be dismissed by clicking on a modalButton(), or from a call to removeModal() on the server.}
+
+\item{callback_add, callback_update, callback_delete}{Functions to be executed just before an action (add, update or delete) is performed on the data.
+Functions used must be like \code{function(data, row) {...}} where :
+\itemize{
+\item \code{data} will be the data in the table at the moment the function is called
+\item \code{row} will contain either a new row of data (add), an updated row (update) or the row that will be deleted (delete).
+}
+
+If the return value of a callback function is not truthy (see \code{\link[shiny:isTruthy]{shiny::isTruthy()}}) then the action is cancelled.}
+
+\item{only_callback}{Only use callbacks, don't alter data within the module.}
+
+\item{use_notify}{Display information or not to user through \code{\link[shinybusy:notify]{shinybusy::notify()}}.}
 }
 \value{
 the edited \code{data.frame} in reactable format with the user modifications
@@ -56,6 +89,7 @@ This module returns the edited table with the user modifications.
 library(shiny)
 library(datamods)
 library(bslib)
+library(reactable)
 
 ui <- fluidPage(
   theme = bs_theme(
@@ -79,7 +113,53 @@ server <- function(input, output, session) {
     download_excel = TRUE,
     file_name_export = "datas",
     # var_edit = c("name", "job", "credit_card_provider", "credit_card_security_code"),
-    var_mandatory = c("name", "job")
+    var_mandatory = c("name", "job"),
+    var_labels = list(
+      name = "Name",
+      credit_card_security_code = "Credit card security code",
+      date_obtained = "Date obtained",
+      contactless_card = "Contactless Card",
+      credit_card_provider = "Credit card provider"
+    ),
+    n_column = 2,
+    modal_size = "l",
+    modal_easy_close = TRUE,
+    reactable_options = list(
+      defaultColDef = colDef(filterable = TRUE),
+      selection = "single",
+      columns = list(
+        name = colDef(name = "Name", style = list(fontWeight = "bold")),
+        credit_card_security_code = colDef(name = "Credit card security code"),
+        date_obtained = colDef(name = "Date obtained", format = colFormat(date = TRUE)),
+        contactless_card = colDef(
+          name = "Contactless Card",
+          cell = function(value) {
+            # Render as an X mark or check mark
+            if (value == FALSE) "\u274c No" else "\u2714\ufe0f Yes"
+          }),
+        credit_card_provider = colDef(
+          name = "Credit card provider",
+          style = function(value) {
+            if (value == "Mastercard") {
+              color <- "#e06631"
+            } else if (value == "VISA 16 digit") {
+              color <- "#0c13cf"
+            } else if (value == "American Express") {
+              color <- "#4d8be8"
+            } else if (value == "JCB 16 digit") {
+              color <- "#23c45e"
+            } else {
+              color <- "#777"
+            }
+            list(color = color, fontWeight = "bold")
+          }
+        )
+      ),
+      bordered = TRUE,
+      compact = TRUE,
+      searchable = TRUE,
+      highlight = TRUE
+    )
   )
 
   output$result <- renderPrint({

@@ -55,6 +55,7 @@ filter_data_ui <- function(id,
 #' @param defaults [shiny::reactive()] function returning a
 #'  named `list` of variable:value pairs which will be used to set the filters.
 #' @param drop_ids Drop columns containing more than 90% of unique values, or than 50 distinct values.
+#' Use `FALSE` to disable or use `list(p = 0.9, n = 50)` to customize threshold values.
 #' @param widget_char Widget to use for `character` variables: [shinyWidgets::pickerInput()]
 #'  or [shiny::selectInput()] (default).
 #' @param widget_num Widget to use for `numeric` variables: [shinyWidgets::numericRangeInput()]
@@ -76,7 +77,7 @@ filter_data_server <- function(id,
                                vars = reactive(NULL),
                                name = reactive("data"),
                                defaults = reactive(NULL),
-                               drop_ids = TRUE,
+                               drop_ids = getOption("datamods.filter.drop_ids", default = TRUE),
                                widget_char = c("virtualSelect", "select", "picker"),
                                widget_num = c("slider", "range"),
                                widget_date = c("slider", "range"),
@@ -187,6 +188,7 @@ filter_data_server <- function(id,
 #' @importFrom shiny selectizeInput sliderInput dateRangeInput
 #' @importFrom stats setNames
 #' @importFrom shinyWidgets pickerInput pickerOptions numericRangeInput virtualSelectInput
+#' @importFrom rlang is_list
 create_filters <- function(data,
                            vars = NULL,
                            defaults = NULL,
@@ -209,6 +211,9 @@ create_filters <- function(data,
   if (isTRUE(drop_ids)) {
     data <- drop_id(data)
   }
+  if (is_list(drop_ids)) {
+    data <- drop_id(data, n = drop_ids$n, p = drop_ids$p)
+  }
   data <- dropListColumns(data)
   if (is.null(vars)) {
     vars <- names(data)
@@ -220,7 +225,7 @@ create_filters <- function(data,
     } else {
       labels <- vars
     }
-    vars_display <- intersect(names(data), vars)
+    vars_display <- intersect(vars, names(data))
     labels <- labels[vars %in% vars_display]
     vars <- vars_display
   }
@@ -359,7 +364,7 @@ create_filters <- function(data,
               width = width,
               showValueAsTags = TRUE,
               zIndex = 9999,
-              dropboxWrapper = ".datamods-filters-container",
+              dropboxWrapper = paste0("#", ns("placeholder_filters"), " .datamods-filters-container"),
               html = TRUE
             )
           )
@@ -557,22 +562,31 @@ make_expr_filter <- function(filters, filters_na, data, data_name) {
   ))
 }
 
-
-drop_id <- function(data) {
+#' @importFrom rlang is_double
+drop_id <- function(data, p = 0.9, n = 50) {
+  p <- as.numeric(p)
+  if (!is_double(p, n = 1))
+    p <- 0.9
+  n <- as.numeric(n)
+  if (!is_double(n, n = 1))
+    n <- 50
   data[] <- lapply(
     X = data,
     FUN = function(x) {
       if (inherits(x, c("factor", "character"))) {
         values <- unique(as.character(x))
-        values <- tryCatch(values[trimws(values) != ""], error = function(e){
-          Encoding(values[!validEnc(values)]) <- "unknown"
-          values
-        })
+        values <- tryCatch(
+          values[trimws(values) != ""],
+          error = function(e) {
+            Encoding(values[!validEnc(values)]) <- "unknown"
+            values
+          }
+        )
         if (length(values) <= 1)
           return(NULL)
-        if (length(values) >= length(x) * 0.9)
+        if (isTRUE(length(values) >= (length(x) * p)))
           return(NULL)
-        if (length(values) >= 50)
+        if (isTRUE(length(values) >= n))
           return(NULL)
       }
       x
