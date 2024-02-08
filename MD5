@@ -1,9 +1,9 @@
-a28b0285621a487ed5d48a2b7a1b8684 *DESCRIPTION
+16c2d3af8e10a3d626f90a2d0ba35548 *DESCRIPTION
 919d478bc7e1b24cd44f2f75362e4fbf *NAMESPACE
-f8bd6afdf18c2e10455e791a7dca995a *NEWS.md
+bea87d74d8aa2b67b221a65960bd64c6 *NEWS.md
 e36f65cf9a35595fedc515bae6768a27 *R/data.R
-c9f4732d4ed5b76983eb6615c0bcef88 *R/edit-data-utils.R
-d4cf8888f7bac2b8a74f88e3823a69ce *R/edit-data.R
+609289c3800a9fa1ff03804689c8574e *R/edit-data-utils.R
+1a71c40551b3ee8ee4541bbbe5338433 *R/edit-data.R
 69761110218a421b997ea12aea2efa52 *R/filter-data.R
 1d72478b5432e00f1f4ebc52be0625d1 *R/i18n.R
 9a6a840ae8e4645d35b0789020a15416 *R/import-copypaste.R
@@ -22,7 +22,7 @@ eb448746dd87b3ca187b07c9bca1692e *R/utils.R
 d396d043da6e755ebc2a4395ec9dac15 *R/validation.R
 7945dcc0a287919f0280d3bb3d16e91b *R/zzz.R
 10eb43dafd7f39b05376d36c05b18abe *README.md
-760c9a787274ef3cd3dbd2c2132ad308 *build/vignette.rds
+be475a8fb0f848c3157052a9ad737d83 *build/vignette.rds
 9aebdc7f82976fe4a1d752e1f0ca97e0 *data/demo_edit.rda
 895eded20fb804db3ce16ae2662c3845 *inst/assets/css/datamods.css
 a118fe92f239c7d54d2db2192e2a83e6 *inst/assets/js/datamods.js
@@ -31,7 +31,7 @@ e872e20bd7ab244b6aed66c49c96e983 *inst/doc/datamods.Rmd
 b45fc393678eb7be4e82e1b8da8512ac *inst/doc/datamods.html
 8cb6dc556632acb662cedf73a7df79cb *inst/doc/i18n.R
 64574382aefe1bdb942514a8e42e4fb3 *inst/doc/i18n.Rmd
-0fac5244764b7a2b852d48c3e3362c5b *inst/doc/i18n.html
+e5a5fa5358c0e397342dfc5f06300228 *inst/doc/i18n.html
 a99833f538af72039f98a04575558789 *inst/extdata/mtcars.csv
 1c1ea80a0665d7e7c6f09c2c86a604ba *inst/extdata/mtcars.dat
 a76f3e6fe44afa6a2533725659ba35a1 *inst/extdata/mtcars.json
@@ -43,7 +43,7 @@ e3e6c5577182c297e185d0cf79b51851 *inst/extdata/rules.yaml
 69bf069c5d4228feed2314063db409c6 *inst/i18n/cn.csv
 6a9da391653b99fffd5e5ab89dbcfe43 *inst/i18n/de.csv
 7494757b2f5de963f63367bf1c3a8eaa *inst/i18n/es.csv
-03876e9694c5caa68306a307ea65d834 *inst/i18n/fr.csv
+cd5de4d28c3fd4296f440d741f6477f7 *inst/i18n/fr.csv
 30c6d61c3970b6fcb6645389022ed001 *inst/i18n/ja.csv
 06209e212f67003a3425ded62b6424d6 *inst/i18n/kr.csv
 9ecf61495a58345088aa18208da71b30 *inst/i18n/mk.csv
@@ -51,7 +51,7 @@ e3e6c5577182c297e185d0cf79b51851 *inst/extdata/rules.yaml
 8c6028a3b2e171997d7c6d82dbc0601f *inst/i18n/pt.csv
 070643476ac7cea5ad96954c3c2cfcf4 *inst/i18n/tr.csv
 09ecf5abf69637417886b9411b948978 *man/demo_edit.Rd
-b56502c882865b0753499075e2703e20 *man/edit-data.Rd
+53cac3517c0c5483aa70dff448078f7c *man/edit-data.Rd
 d9a02cdef2a57db12e71f3493f513188 *man/figures/datamods-edit-data.png
 a85eba547f39407972f2ee9ed0272de9 *man/figures/datamods-filter.png
 6cba8737b72df9df2ae4921f289dbc08 *man/figures/datamods-modal.png
