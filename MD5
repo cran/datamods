@@ -1,9 +1,9 @@
-16c2d3af8e10a3d626f90a2d0ba35548 *DESCRIPTION
+ed1b0ba5afd62b0edadd395387794a64 *DESCRIPTION
 919d478bc7e1b24cd44f2f75362e4fbf *NAMESPACE
-bea87d74d8aa2b67b221a65960bd64c6 *NEWS.md
+48bf6afd5c0329f8929eef66bffb520b *NEWS.md
 e36f65cf9a35595fedc515bae6768a27 *R/data.R
 609289c3800a9fa1ff03804689c8574e *R/edit-data-utils.R
-1a71c40551b3ee8ee4541bbbe5338433 *R/edit-data.R
+5609d40fc07a1e9f928107327ce73bc2 *R/edit-data.R
 69761110218a421b997ea12aea2efa52 *R/filter-data.R
 1d72478b5432e00f1f4ebc52be0625d1 *R/i18n.R
 9a6a840ae8e4645d35b0789020a15416 *R/import-copypaste.R
@@ -82,7 +82,7 @@ dfddd3824225a462e099203b2396927f *man/import-modal.Rd
 7301d78c2a516130a6327b6e4ac45cfd *man/import-url.Rd
 799cbe8ec70e79141937eab2f03b2c9a *man/list_pkg_data.Rd
 4062e4fa5c8179321f59a59896ef6ca0 *man/module-sample.Rd
-7fa358a844f7403d7257cfbff5d9d7dc *man/select-group.Rd
+0b2e9be262465b21c6e5c49e49cf9e13 *man/select-group.Rd
 a32a735fbd2b5183ae78dbd23388cb8b *man/show_data.Rd
 d1f42de7dee4040d323a915593d647de *man/update-variables.Rd
 102527526c2d684d787970a4d83178c7 *man/validation.Rd
