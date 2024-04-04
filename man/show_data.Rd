@@ -10,7 +10,7 @@ show_data(
   options = NULL,
   show_classes = TRUE,
   type = c("popup", "modal"),
-  width = "80\%"
+  width = "65\%"
 )
 }
 \arguments{
@@ -38,6 +38,7 @@ library(shiny)
 library(datamods)
 
 ui <- fluidPage(
+  theme = bslib::bs_theme(version = 5L),
   actionButton(
     inputId = "show1",
     label = "Show data in popup",
@@ -57,17 +58,18 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   observeEvent(input$show1, {
-    show_data(mtcars, title = "My data")
+    show_data(MASS::Cars93, title = "MASS::Cars93 dataset")
   })
   observeEvent(input$show2, {
-    show_data(mtcars, title = "My data", type = "modal")
+    show_data(MASS::Cars93, title = "MASS::Cars93 dataset", type = "modal")
   })
   observeEvent(input$show3, {
     show_data(
-      data = mtcars,
-      title = "My data",
+      data = MASS::Cars93,
+      title = "MASS::Cars93 dataset",
       show_classes = FALSE,
-      options = list(searchable = TRUE, highlight = TRUE)
+      options = list(pagination = 10),
+      type = "modal"
     )
   })
 }

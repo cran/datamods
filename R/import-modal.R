@@ -133,10 +133,10 @@ import_ui <- function(id,
   tags$div(
     class = "datamods-imports",
     html_dependency_datamods(),
-    tabsetPanel(
-      type = "tabs",
+    tags$style(".tui-grid-cell-summary {vertical-align: baseline;}"),
+    bslib::navset_underline(
       id = ns("tabs-mode"),
-      tabPanel(
+      bslib::nav_panel(
         title = tagList(
           phosphoricons::ph("download-simple", title = i18n("Import")),
           i18n("Import")
@@ -144,16 +144,19 @@ import_ui <- function(id,
         value = "import",
         importTab
       ),
-      tabPanel(
+      bslib::nav_panel(
         title = tagList(
           phosphoricons::ph("table", title = i18n("View")),
           i18n("View")
         ),
         value = "view",
         tags$br(),
-        reactable::reactableOutput(outputId = ns("view"))
+        tags$div(
+          style = css(minHeight = "600px"),
+          toastui::datagridOutput(outputId = ns("view"), height = "auto")
+        )
       ),
-      tabPanel(
+      bslib::nav_panel(
         title = tagList(
           phosphoricons::ph("gear-six", title = i18n("Update")),
           i18n("Update")
@@ -162,7 +165,7 @@ import_ui <- function(id,
         tags$br(),
         update_variables_ui(id = ns("update"), title = NULL)
       ),
-      tabPanel(
+      bslib::nav_panel(
         title = tagList(
           phosphoricons::ph("shield-check", title = i18n("Validate")),
           i18n("Validate")
@@ -323,18 +326,21 @@ import_server <- function(id,
         }
       })
 
-      output$view <- reactable::renderReactable({
+      output$view <- toastui::renderDatagrid({
         data <- req(data_rv$data)
-        reactable::reactable(
-          data,
-          defaultColDef = reactable::colDef(
-            header = header_with_classes(data)
-          ),
-          columns = list(),
-          bordered = TRUE,
-          compact = TRUE,
-          striped = TRUE
+        session <- shiny::getDefaultReactiveDomain()
+        gridTheme <- getOption("datagrid.theme")
+        if (length(gridTheme) < 1) {
+          apply_grid_theme()
+        }
+        on.exit(toastui::reset_grid_theme())
+        grid <- toastui::datagrid(
+          data = data,
+          summary = construct_col_summary(data),
+          colwidths = "guess",
+          minBodyHeight = 500
         )
+        toastui::grid_columns(grid, className = "font-monospace")
       })
 
       updated_data <- update_variables_server(
@@ -406,14 +412,7 @@ import_modal <- function(id,
                          file_extensions = c(".csv", ".txt", ".xls", ".xlsx", ".rds", ".fst", ".sas7bdat", ".sav")) {
   showModal(modalDialog(
     title = tagList(
-      tags$button(
-        phosphoricons::ph("x", title = i18n("Close"), height = "2em"),
-        class = "btn btn-link",
-        style = css(border = "0 none", position = "absolute", top = "5px", right = "5px"),
-        `data-dismiss` = "modal",
-        `data-bs-dismiss` = "modal",
-        `aria-label` = i18n("Close")
-      ),
+      button_close_modal(),
       title
     ),
     import_ui(id, from, file_extensions = file_extensions),

@@ -22,26 +22,29 @@ show_data <- function(data,
                       options = NULL,
                       show_classes = TRUE,
                       type = c("popup", "modal"),
-                      width = "80%") { # nocov start
+                      width = "65%") { # nocov start
   type <- match.arg(type)
   data <- as.data.frame(data)
-  if (isTRUE(show_classes)) {
-    defaultColDef <- reactable::colDef(
-      header = header_with_classes(data)
-    )
-  } else {
-    defaultColDef <- NULL
+
+  gridTheme <- getOption("datagrid.theme")
+  if (length(gridTheme) < 1) {
+    apply_grid_theme()
   }
+  on.exit(toastui::reset_grid_theme())
+
   if (is.null(options))
     options <- list()
-  options <- modifyList(x = options, val = list(
-    bordered = TRUE,
-    compact = TRUE,
-    striped = TRUE
-  ))
+
+  options$height <- 550
+  options$minBodyHeight <- 400
   options$data <- data
-  options$defaultColDef <- defaultColDef
-  datatable <- rlang::exec(reactable::reactable, !!!options)
+  options$theme <- "default"
+  options$colwidths <- "guess"
+  options$guess_colwidths_opts <- list(min_width = 90, max_width = 400, mul = 1, add = 10)
+  if (isTRUE(show_classes))
+    options$summary <- construct_col_summary(data)
+  datatable <- rlang::exec(toastui::datagrid, !!!options)
+  datatable <- toastui::grid_columns(datatable, className = "font-monospace")
   if (identical(type, "popup")) {
     show_alert(
       title = NULL,
@@ -74,12 +77,15 @@ show_data <- function(data,
         ),
         title
       ),
-      reactable::renderReactable(datatable),
+      tags$div(
+        style = css(minHeight = validateCssUnit(options$height)),
+        toastui::renderDatagrid2(datatable)
+        # datatasble
+      ),
       size = "l",
       footer = NULL,
       easyClose = TRUE
     ))
   }
 } # nocov end
-
 
