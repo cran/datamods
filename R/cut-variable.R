@@ -2,7 +2,7 @@
 #' @title Module to Convert Numeric to Factor
 #'
 #' @description
-#' This module contain an interface to cut a numeric factor into several intervals.
+#' This module contain an interface to cut a numeric into several intervals.
 #'
 #'
 #' @param id Module ID.
@@ -25,7 +25,7 @@ cut_variable_ui <- function(id) {
         width = 3,
         virtualSelectInput(
           inputId = ns("variable"),
-          label = "Variable to cut:",
+          label = i18n("Variable to cut:"),
           choices = NULL,
           width = "100%"
         )
@@ -34,7 +34,7 @@ cut_variable_ui <- function(id) {
         width = 3,
         virtualSelectInput(
           inputId = ns("method"),
-          label = "Method:",
+          label = i18n("Method:"),
           choices = c(
             "sd",
             "equal",
@@ -57,7 +57,7 @@ cut_variable_ui <- function(id) {
         width = 3,
         numericInput(
           inputId = ns("n_breaks"),
-          label = "Number of breaks:",
+          label = i18n("Number of breaks:"),
           value = 5,
           min = 2,
           max = 12,
@@ -68,21 +68,21 @@ cut_variable_ui <- function(id) {
         width = 3,
         checkboxInput(
           inputId = ns("right"),
-          label = "Close intervals on the right",
+          label = i18n("Close intervals on the right"),
           value = TRUE
         ),
         checkboxInput(
           inputId = ns("include_lowest"),
-          label = "Include lowest value",
+          label = i18n("Include lowest value"),
           value = FALSE
         )
       )
     ),
-    plotOutput(outputId = ns("plot"), width = "100%"),
+    plotOutput(outputId = ns("plot"), width = "100%", height = "270px"),
     datagridOutput2(outputId = ns("count")),
     actionButton(
       inputId = ns("create"),
-      label = tagList(ph("scissors"), "Create factor variable"),
+      label = tagList(ph("scissors"), i18n("Create factor variable")),
       class = "btn-outline-primary float-end"
     ),
     tags$div(class = "clearfix")
@@ -96,7 +96,7 @@ cut_variable_ui <- function(id) {
 #' @importFrom shiny moduleServer observeEvent reactive req bindEvent renderPlot
 #' @importFrom shinyWidgets updateVirtualSelect
 #' @importFrom toastui renderDatagrid2 datagrid grid_colorbar
-#' @importFrom rlang %||%
+#' @importFrom rlang %||% call2 set_names expr syms
 #' @importFrom classInt classIntervals
 #'
 #' @rdname cut-variable
@@ -143,6 +143,22 @@ cut_variable_server <- function(id, data_r = reactive(NULL)) {
           breaks = breaks_r()$brks,
           include.lowest = input$include_lowest,
           right = input$right
+        )
+        code <- call2(
+          "mutate",
+          !!!set_names(
+            list(
+              expr(cut(
+                !!!syms(list(x = variable)),
+                !!!list(breaks = breaks_r()$brks, include.lowest = input$include_lowest, right = input$right)
+              ))
+            ),
+            paste0(variable, "_cut")
+          )
+        )
+        attr(data, "code") <- Reduce(
+          f = function(x, y) expr(!!x %>% !!y),
+          x = c(attr(data, "code"),  code)
         )
         data
       })
@@ -196,7 +212,7 @@ cut_variable_server <- function(id, data_r = reactive(NULL)) {
 #'
 #' @rdname cut-variable
 modal_cut_variable <- function(id,
-                               title = "Convert Numeric to Factor",
+                               title = i18n("Convert Numeric to Factor"),
                                easyClose = TRUE,
                                size = "l",
                                footer = NULL) {
@@ -212,6 +228,36 @@ modal_cut_variable <- function(id,
     size = size,
     footer = footer
   ))
+}
+
+
+#' @inheritParams shinyWidgets::WinBox
+#' @export
+#'
+#' @importFrom shinyWidgets WinBox wbOptions wbControls
+#' @importFrom htmltools tagList
+#' @rdname cut-variable
+winbox_cut_variable <- function(id,
+                                title = i18n("Convert Numeric to Factor"),
+                                options = shinyWidgets::wbOptions(),
+                                controls = shinyWidgets::wbControls()) {
+  ns <- NS(id)
+  WinBox(
+    title = title,
+    ui = tagList(
+      cut_variable_ui(id),
+      tags$div(
+        style = "display: none;",
+        textInput(inputId = ns("hidden"), label = NULL, value = genId())
+      )
+    ),
+    options = modifyList(
+      shinyWidgets::wbOptions(height = "750px", modal = TRUE),
+      options
+    ),
+    controls = controls,
+    auto_height = FALSE
+  )
 }
 
 

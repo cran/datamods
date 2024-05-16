@@ -25,7 +25,7 @@ import_server(
 import_modal(
   id,
   from,
-  title = "Import data",
+  title = i18n("Import data"),
   size = "l",
   file_extensions = c(".csv", ".txt", ".xls", ".xlsx", ".rds", ".fst", ".sas7bdat",
     ".sav")
@@ -86,7 +86,7 @@ library(datamods)
 
 ui <- fluidPage(
   # Try with different Bootstrap version
-  # theme = bslib::bs_theme(version = 5, preset = "bootstrap"),
+  theme = bslib::bs_theme(version = 5, preset = "bootstrap"),
   fluidRow(
     column(
       width = 4,

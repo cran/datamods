@@ -4,9 +4,14 @@
 #' @param data a data object (either a `matrix` or a `data.frame`).
 #' @param title Title to be displayed in window.
 #' @param show_classes Show variables classes under variables names in table header.
-#' @param type Display table in a pop-up or in modal window.
-#' @param options Arguments passed to [reactable::reactable()].
-#' @param width Width of the window, only used if `type = "popup"`.
+#' @param type Display table in a pop-up with [shinyWidgets::show_alert()],
+#'  in modal window with [shiny::showModal()] or in a WinBox window with [shinyWidgets::WinBox()].
+#' @param options Arguments passed to [toastui::datagrid()].
+#' @param width Width of the window, only used if `type = "popup"` or `type = "winbox"`.
+#' @param ... Additional options, such as `wbOptions = wbOptions()` or `wbControls = wbControls()`.
+#'
+#' @note
+#' If you use `type = "winbox"`, you'll need to use `shinyWidgets::html_dependency_winbox()` somewhere in your UI.
 #'
 #' @return No value.
 #' @export
@@ -14,18 +19,19 @@
 #' @importFrom shinyWidgets show_alert
 #' @importFrom htmltools tags tagList css
 #' @importFrom shiny showModal modalDialog
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList packageVersion
 #'
 #' @example examples/show_data.R
 show_data <- function(data,
                       title = NULL,
                       options = NULL,
                       show_classes = TRUE,
-                      type = c("popup", "modal"),
-                      width = "65%") { # nocov start
+                      type = c("popup", "modal", "winbox"),
+                      width = "65%",
+                      ...) { # nocov start
   type <- match.arg(type)
   data <- as.data.frame(data)
-
+  args <- list(...)
   gridTheme <- getOption("datagrid.theme")
   if (length(gridTheme) < 1) {
     apply_grid_theme()
@@ -45,7 +51,39 @@ show_data <- function(data,
     options$summary <- construct_col_summary(data)
   datatable <- rlang::exec(toastui::datagrid, !!!options)
   datatable <- toastui::grid_columns(datatable, className = "font-monospace")
-  if (identical(type, "popup")) {
+  if (identical(type, "winbox")) {
+    stopifnot(
+      "You need shinyWidgets >= 0.8.4" = packageVersion("shinyWidgets") >= "0.8.4"
+    )
+    wb_options <- if (is.null(args$wbOptions)) {
+      shinyWidgets::wbOptions(
+        height = "600px",
+        width = width,
+        modal = TRUE
+      )
+    } else {
+      modifyList(
+        shinyWidgets::wbOptions(
+          height = "600px",
+          width = width,
+          modal = TRUE
+        ),
+        args$wbOptions
+      )
+    }
+    wb_controls <- if (is.null(args$wbControls)) {
+      shinyWidgets::wbControls()
+    } else {
+      args$wbControls
+    }
+    shinyWidgets::WinBox(
+      title = title,
+      ui = datatable,
+      options = wb_options,
+      controls = wb_controls,
+      padding = "0 5px"
+    )
+  } else if (identical(type, "popup")) {
     show_alert(
       title = NULL,
       text = tags$div(
@@ -67,22 +105,14 @@ show_data <- function(data,
   } else {
     showModal(modalDialog(
       title = tagList(
-        tags$button(
-          phosphoricons::ph("x", title = i18n("Close"), height = "2em"),
-          class = "btn btn-link",
-          style = css(border = "0 none", position = "absolute", top = "5px", right = "5px"),
-          `data-dismiss` = "modal",
-          `data-bs-dismiss` = "modal",
-          `aria-label` = i18n("Close")
-        ),
+        button_close_modal(),
         title
       ),
       tags$div(
         style = css(minHeight = validateCssUnit(options$height)),
         toastui::renderDatagrid2(datatable)
-        # datatasble
       ),
-      size = "l",
+      size = "xl",
       footer = NULL,
       easyClose = TRUE
     ))

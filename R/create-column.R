@@ -2,7 +2,7 @@
 #' @title Create new column
 #'
 #' @description
-#' This module allow to enter an expression to create a new column in `data.frame`.
+#' This module allow to enter an expression to create a new column in a `data.frame`.
 #'
 #'
 #' @param id Module's ID.
@@ -28,12 +28,13 @@
 create_column_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    html_dependency_datamods(),
     fluidRow(
       column(
         width = 6,
         textInput(
           inputId = ns("new_column"),
-          label = "New column name:",
+          label = i18n("New column name:"),
           value = "new_column1",
           width = "100%"
         )
@@ -42,7 +43,7 @@ create_column_ui <- function(id) {
         width = 6,
         virtualSelectInput(
           inputId = ns("group_by"),
-          label = "Group calculation by:",
+          label = i18n("Group calculation by:"),
           choices = NULL,
           multiple = TRUE,
           disableSelectAll = TRUE,
@@ -53,7 +54,7 @@ create_column_ui <- function(id) {
     ),
     textAreaInput(
       inputId = ns("expression"),
-      label = "Enter an expression to define new column:",
+      label = i18n("Enter an expression to define new column:"),
       value = "",
       width = "100%",
       rows = 6
@@ -61,9 +62,10 @@ create_column_ui <- function(id) {
     tags$i(
       class = "d-block",
       ph("info"),
-      "Click on a column to add it to the expression:"
+      i18n("Click on a column name to add it to the expression:")
     ),
     uiOutput(outputId = ns("columns")),
+    uiOutput(outputId = ns("feedback")),
     tags$div(
       style = css(
         display = "grid",
@@ -74,7 +76,7 @@ create_column_ui <- function(id) {
       actionButton(
         inputId = ns("compute"),
         label = tagList(
-          ph("gear"), "Create column"
+          ph("gear"), i18n("Create column")
         ),
         class = "btn-outline-primary",
         width = "100%"
@@ -87,8 +89,7 @@ create_column_ui <- function(id) {
         class = "btn-outline-danger",
         width = "100%"
       )
-    ),
-    uiOutput(outputId = ns("feedback"))
+    )
   )
 }
 
@@ -111,7 +112,20 @@ create_column_server <- function(id,
 
       ns <- session$ns
 
-      rv <- reactiveValues(data = NULL, feedback = NULL)
+      info_alert <- alert(
+        status = "info",
+        ph("question"),
+        i18n("Choose a name for the column to be created or modified,"),
+        i18n("then enter an expression before clicking on the button above to validate or on "),
+        ph("trash"), i18n("to delete it.")
+      )
+
+      rv <- reactiveValues(
+        data = NULL,
+        feedback =info_alert
+      )
+
+      observeEvent(input$hidden, rv$feedback <- info_alert)
 
       bindEvent(observe({
         data <- data_r()
@@ -127,7 +141,14 @@ create_column_server <- function(id,
 
       output$columns <- renderUI({
         data <- req(rv$data)
-        lapply(names(data), btn_column, inputId = ns("add_column"))
+        col_type <- getFromNamespace("col_type", "esquisse")
+        mapply(
+          label = names(data),
+          type = col_type(data),
+          FUN = btn_column,
+          MoreArgs = list(inputId = ns("add_column")),
+          SIMPLIFY = FALSE
+        )
       })
 
       observeEvent(input$add_column, {
@@ -142,7 +163,7 @@ create_column_server <- function(id,
         if (input$new_column == "") {
           rv$feedback <- alert(
             status = "warning",
-            ph("warning"), "New column name cannot be empty"
+            ph("warning"), i18n("New column name cannot be empty")
           )
         }
       })
@@ -200,12 +221,12 @@ list_allowed_operations <- function() {
 #' @inheritParams shiny::modalDialog
 #' @export
 #'
-#' @importFrom shiny showModal modalDialog
+#' @importFrom shiny showModal modalDialog textInput
 #' @importFrom htmltools tagList
 #'
 #' @rdname create-column
 modal_create_column <- function(id,
-                                title = "Create a new column",
+                                title = i18n("Create a new column"),
                                 easyClose = TRUE,
                                 size = "l",
                                 footer = NULL) {
@@ -223,6 +244,35 @@ modal_create_column <- function(id,
   ))
 }
 
+#' @inheritParams shinyWidgets::WinBox
+#' @export
+#'
+#' @importFrom shinyWidgets WinBox wbOptions wbControls
+#' @importFrom htmltools tagList
+#' @rdname create-column
+winbox_create_column <- function(id,
+                                 title = i18n("Create a new column"),
+                                 options = shinyWidgets::wbOptions(),
+                                 controls = shinyWidgets::wbControls()) {
+  ns <- NS(id)
+  WinBox(
+    title = title,
+    ui = tagList(
+      create_column_ui(id),
+      tags$div(
+        style = "display: none;",
+        textInput(inputId = ns("hidden"), label = NULL, value = genId())
+      )
+    ),
+    options = modifyList(
+      shinyWidgets::wbOptions(height = "550px", modal = TRUE),
+      options
+    ),
+    controls = controls,
+    auto_height = FALSE
+  )
+}
+
 
 #' @importFrom rlang parse_expr eval_tidy call2 set_names syms
 #' @importFrom data.table as.data.table :=
@@ -237,7 +287,7 @@ try_compute_column <- function(expression,
   }
   funs <- unlist(c(extract_calls(parsed), lapply(parsed, extract_calls)), recursive = TRUE)
   if (!are_allowed_operations(funs, allowed_operations)) {
-    return(alert_error("Some operations are not allowed"))
+    return(alert_error(i18n("Some operations are not allowed")))
   }
   if (!isTruthy(by)) {
     result <- try(
@@ -265,15 +315,19 @@ try_compute_column <- function(expression,
   code <- if (!isTruthy(by)) {
     call2("mutate", !!!set_names(list(parse_expr(expression)), name))
   } else {
-    expr(
-      !!expr(group_by(!!!syms(by))) %>%
-        !!call2("mutate", !!!set_names(list(parse_expr(expression)), name))
+    call2(
+      "mutate",
+      !!!set_names(list(parse_expr(expression)), name),
+      !!!list(.by = expr(c(!!!syms(by))))
     )
   }
-  attr(rv$data, "code") <- c(attr(rv$data, "code"),  code)
+  attr(rv$data, "code") <- Reduce(
+    f = function(x, y) expr(!!x %>% !!y),
+    x = c(attr(rv$data, "code"),  code)
+  )
   alert(
     status = "success",
-    ph("check"), "Column added!"
+    ph("check"), i18n("Column added!")
   )
 }
 
@@ -300,16 +354,24 @@ alert_error <- function(text) {
 }
 
 
-btn_column <- function(label, inputId) {
+btn_column <- function(label, type, inputId) {
+  icon <- switch (
+    type,
+    discrete = "text-aa",
+    time = "calendar",
+    continuous = "hash",
+    NULL
+  )
   tags$button(
     type = "button",
-    class = "btn btn-primary",
+    class = paste0("btn btn-column-", type),
     style = css(
       "--bs-btn-padding-y" = ".25rem",
       "--bs-btn-padding-x" = ".5rem",
       "--bs-btn-font-size" = ".75rem",
       "margin-bottom" = "5px"
     ),
+    if (!is.null(icon)) ph(icon, weight = "regular"),
     label,
     onclick = sprintf(
       "Shiny.setInputValue('%s', '%s', {priority: 'event'})",
@@ -340,12 +402,17 @@ make_choices_with_infos <- function(data) {
       } else {
         NULL
       }
+      description <- if (is.atomic(values)) {
+        paste(i18n("Unique values:"), data.table::uniqueN(values))
+      } else {
+        ""
+      }
       list(
         label = htmltools::doRenderTags(tagList(
           icon, nm
         )),
         value = nm,
-        description = paste("Unique values:", data.table::uniqueN(values))
+        description = description
       )
     }
   )

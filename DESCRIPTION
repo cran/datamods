@@ -1,6 +1,6 @@
 Package: datamods
 Title: Modules to Import and Manipulate Data in 'Shiny'
-Version: 1.5.0
+Version: 1.5.1
 Authors@R: 
     c(person(given = "Victor",
              family = "Perrier",
@@ -30,14 +30,15 @@ BugReports: https://github.com/dreamRs/datamods/issues
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 Imports: classInt, data.table, htmltools, phosphoricons, reactable,
-        readxl, rio, rlang, shiny (>= 1.5.0), shinyWidgets (>= 0.7.3),
+        readxl, rio, rlang, shiny (>= 1.5.0), shinyWidgets (>= 0.8.4),
         tibble, toastui (>= 0.3.3), tools, shinybusy, writexl
-Suggests: bslib, jsonlite, knitr, MASS, rmarkdown, testthat, validate
+Suggests: bslib, ggplot2, jsonlite, knitr, MASS, rmarkdown, testthat,
+        validate
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 LazyData: true
 NeedsCompilation: no
-Packaged: 2024-04-04 17:14:19 UTC; victor
+Packaged: 2024-05-16 09:52:56 UTC; perri
 Author: Victor Perrier [aut, cre, cph],
   Fanny Meyer [aut],
   Samra Goumri [aut],
@@ -45,4 +46,4 @@ Author: Victor Perrier [aut, cre, cph],
   Eduard Szöcs [ctb]
 Maintainer: Victor Perrier <victor.perrier@dreamrs.fr>
 Repository: CRAN
-Date/Publication: 2024-04-04 18:23:05 UTC
+Date/Publication: 2024-05-16 10:30:02 UTC
