@@ -10,7 +10,7 @@
 #' @return A [shiny::reactive()] function returning the data.
 #' @export
 #'
-#' @importFrom shiny NS fluidRow column numericInput checkboxInput checkboxInput plotOutput
+#' @importFrom shiny NS fluidRow column numericInput checkboxInput checkboxInput plotOutput uiOutput
 #' @importFrom shinyWidgets virtualSelectInput
 #' @importFrom toastui datagridOutput2
 #'
@@ -36,6 +36,7 @@ cut_variable_ui <- function(id) {
           inputId = ns("method"),
           label = i18n("Method:"),
           choices = c(
+            "fixed",
             "sd",
             "equal",
             "pretty",
@@ -78,6 +79,11 @@ cut_variable_ui <- function(id) {
         )
       )
     ),
+    conditionalPanel(
+      condition = "input.method == 'fixed'",
+      ns = ns,
+      uiOutput(outputId = ns("slider_fixed"))
+    ),
     plotOutput(outputId = ns("plot"), width = "100%", height = "270px"),
     datagridOutput2(outputId = ns("count")),
     actionButton(
@@ -94,7 +100,7 @@ cut_variable_ui <- function(id) {
 #' @export
 #'
 #' @importFrom shiny moduleServer observeEvent reactive req bindEvent renderPlot
-#' @importFrom shinyWidgets updateVirtualSelect
+#' @importFrom shinyWidgets updateVirtualSelect noUiSliderInput
 #' @importFrom toastui renderDatagrid2 datagrid grid_colorbar
 #' @importFrom rlang %||% call2 set_names expr syms
 #' @importFrom classInt classIntervals
@@ -119,19 +125,51 @@ cut_variable_server <- function(id, data_r = reactive(NULL)) {
         )
       }), data_r(), input$hidden)
 
+      output$slider_fixed <- renderUI({
+        data <- req(data_r())
+        variable <- req(input$variable)
+        req(hasName(data, variable))
+        noUiSliderInput(
+          inputId = session$ns("fixed_brks"),
+          label = i18n("Fixed breaks:"),
+          min = floor(min(data[[variable]], na.rm = TRUE)),
+          max = ceiling(max(data[[variable]], na.rm = TRUE)),
+          value = classInt::classIntervals(
+            var = data[[variable]],
+            n = input$n_breaks,
+            style = "quantile"
+          )$brks,
+          color = get_primary_color(),
+          width = "100%"
+        )
+      })
+
       breaks_r <- reactive({
         data <- req(data_r())
         variable <- req(input$variable)
         req(hasName(data, variable))
         req(input$n_breaks, input$method)
-        classInt::classIntervals(data[[variable]], n = input$n_breaks, style = input$method)
+        if (input$method == "fixed") {
+          req(input$fixed_brks)
+          classInt::classIntervals(
+            var = data[[variable]],
+            n = input$n_breaks,
+            style = "fixed",
+            fixedBreaks = input$fixed_brks
+          )
+        } else {
+          classInt::classIntervals(
+            var = data[[variable]],
+            n = input$n_breaks,
+            style = input$method
+          )
+        }
       })
 
       output$plot <- renderPlot({
         data <- req(data_r())
         variable <- req(input$variable)
-        # ggplot_histogram(data, variable, breaks = breaks_r()$brks)
-        plot_histogram(data, variable, breaks = breaks_r()$brks)
+        plot_histogram(data, variable, breaks = breaks_r()$brks, color = get_primary_color())
       })
 
 
@@ -168,7 +206,8 @@ cut_variable_server <- function(id, data_r = reactive(NULL)) {
         variable <- req(input$variable)
         count_data <- as.data.frame(
           table(
-            breaks = data[[paste0(variable, "_cut")]]
+            breaks = data[[paste0(variable, "_cut")]],
+            useNA = "ifany"
           ),
           responseName = "count"
         )
@@ -189,7 +228,7 @@ cut_variable_server <- function(id, data_r = reactive(NULL)) {
           column = "count",
           label_outside = TRUE,
           label_width = "40px",
-          bar_bg = "#112466",
+          bar_bg = get_primary_color(),
           from = c(0, max(count_data$count) + 1)
         )
       })
@@ -262,14 +301,14 @@ winbox_cut_variable <- function(id,
 
 
 #' @importFrom graphics abline axis hist par plot.new plot.window
-plot_histogram <- function(data, column, bins = 30, breaks = NULL) {
+plot_histogram <- function(data, column, bins = 30, breaks = NULL, color = "#112466") {
   x <- data[[column]]
   op <- par(mar = rep(1.5, 4)); on.exit(par(op))
   plot.new()
   plot.window(xlim = range(pretty(x)), ylim =  range(pretty(hist(x, breaks = bins, plot = FALSE)$counts)))
   abline(v = pretty(x), col = "#D8D8D8")
   abline(h = pretty(hist(x, breaks = bins, plot = FALSE)$counts), col = "#D8D8D8")
-  hist(x, breaks = bins, xlim = range(pretty(x)), xaxs = "i", yaxs = "i", col = "#112466", add = TRUE)
+  hist(x, breaks = bins, xlim = range(pretty(x)), xaxs = "i", yaxs = "i", col = color, add = TRUE)
   axis(side = 1, at = pretty(x), pos = 0)
   axis(side = 2, at = pretty(hist(x, breaks = bins, plot = FALSE)$counts), pos = min(pretty(x)))
   abline(v = breaks, col = "#FFFFFF", lty = 1, lwd = 1.5)

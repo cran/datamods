@@ -1,3 +1,10 @@
+# datamods 1.5.2
+
+* `import_file_ui`: back to old parameters layout inside a dropdown button and new argument to switch to inline layout. 
+* `edit_data_server`: allow to use reactive function for reactable_options.
+* cut variable module (`cut_variable_ui`/`cut_variable_server`): allow to select fixed breaks.
+
+
 # datamods 1.5.1
 
 * New module `update_factor_ui()` / `update_factor_server()` to reorder levels of a factor.
