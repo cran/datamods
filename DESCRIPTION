@@ -1,6 +1,6 @@
 Package: datamods
 Title: Modules to Import and Manipulate Data in 'Shiny'
-Version: 1.5.2
+Version: 1.5.3
 Authors@R: 
     c(person(given = "Victor",
              family = "Perrier",
@@ -38,7 +38,7 @@ VignetteBuilder: knitr
 Depends: R (>= 2.10)
 LazyData: true
 NeedsCompilation: no
-Packaged: 2024-09-05 14:04:47 UTC; victor
+Packaged: 2024-10-02 10:05:06 UTC; victorp
 Author: Victor Perrier [aut, cre, cph],
   Fanny Meyer [aut],
   Samra Goumri [aut],
@@ -46,4 +46,4 @@ Author: Victor Perrier [aut, cre, cph],
   Eduard Szöcs [ctb]
 Maintainer: Victor Perrier <victor.perrier@dreamrs.fr>
 Repository: CRAN
-Date/Publication: 2024-09-05 21:00:02 UTC
+Date/Publication: 2024-10-02 10:40:03 UTC

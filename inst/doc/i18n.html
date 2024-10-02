@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -359,7 +359,7 @@ There are 4 different ways to use new labels:</p>
 <h2>Integrated languages</h2>
 <p>The following languages are integrated in {datamods} :</p>
 <ul>
-<li><p><svg id="flag-icon-css-gb" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><p><svg id="flag-icon-css-gb" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <path fill="#012169" d="M0 0h640v480H0z" />
   <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z" />
   <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z" />
@@ -367,7 +367,7 @@ There are 4 different ways to use new labels:</p>
   <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z" />
 </svg> english,
 the default.</p></li>
-<li><p><svg id="flag-icon-css-fr" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><p><svg id="flag-icon-css-fr" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <g fill-rule="evenodd" stroke-width="1pt">
     <path fill="#fff" d="M0 0h640v480H0z" />
     <path fill="#00267f" d="M0 0h213.3v480H0z" />
@@ -378,7 +378,7 @@ activate with:</p></li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;fr&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-mk" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icon-css-mk" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <path fill="#d20000" d="M0 0h640v480H0z" />
   <path fill="#ffe600" d="M0 0h96l224 231.4L544 0h96L0 480h96l224-231.4L544 480h96zm640 192v96L0 192v96zM280 0l40 205.7L360 0zm0 480l40-205.7L360 480z" />
   <circle cx="320" cy="240" r="77.1" fill="#ffe600" stroke="#d20000" stroke-width="17.1"></circle>
@@ -387,7 +387,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;mk&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-br" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icon-css-br" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <g stroke-width="1pt">
     <path fill="#229e45" fill-rule="evenodd" d="M0 0h640v480H0z" />
     <path fill="#f8e509" fill-rule="evenodd" d="M321.4 436l301.5-195.7L319.6 44 17.1 240.7 321.4 436z" />
@@ -431,7 +431,7 @@ activate with:</li>
     </g>
     <path fill="#309e3a" d="M301.8 204.5l2.3-9.8 7.2 1.7-.3 1.6-5.3-1.2-.5 2.2 4.9 1.1-.4 1.7-4.9-1.2-.6 2.7 5.5 1.3-.4 1.6-7.5-1.7z" />
   </g>
-</svg> <svg id="flag-icon-css-pt" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+</svg> <svg id="flag-icon-css-pt" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <path fill="red" d="M256 0h384v480H256z" />
   <path fill="#060" d="M0 0h256v480H0z" />
   <g fill="#ff0" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".6">
@@ -492,7 +492,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;pt&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-al" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icon-css-al" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <path fill="#e41e20" d="M0 0h640v480H0z" />
   <path id="flag-icon-css-al_a" d="M272 93.3c-4.6 0-12.3 1.5-12.2 5-13-2.1-14.3 3.2-13.5 8 1.2-1.9 2.7-3 3.9-3.1 1.7-.3 3.5.3 5.4 1.4a21.6 21.6 0 014.8 4.1c-4.6 1.1-8.2.4-11.8-.2a16.5 16.5 0 01-5.7-2.4c-1.5-1-2-2-4.3-4.3-2.7-2.8-5.6-2-4.7 2.3 2.1 4 5.6 5.8 10 6.6 2.1.3 5.3 1 8.9 1 3.6 0 7.6-.5 9.8 0-1.3.8-2.8 2.3-5.8 2.8-3 .6-7.5-1.8-10.3-2.4.3 2.3 3.3 4.5 9.1 5.7 9.6 2 17.5 3.6 22.8 6.5a37.3 37.3 0 0110.9 9.2c4.7 5.5 5 9.8 5.2 10.8 1 8.8-2.1 13.8-7.9 15.4-2.8.7-8-.7-9.8-2.9-2-2.2-3.7-6-3.2-12 .5-2.2 3.1-8.3.9-9.5a273.7 273.7 0 00-32.3-15.1c-2.5-1-4.5 2.4-5.3 3.8a50.2 50.2 0 01-36-23.7c-4.2-7.6-11.3 0-10.1 7.3 1.9 8 8 13.8 15.4 18 7.5 4.1 17 8.2 26.5 8 5.2 1 5.1 7.6-1 8.9-12.1 0-21.8-.2-30.9-9-6.9-6.3-10.7 1.2-8.8 5.4 3.4 13.1 22.1 16.8 41 12.6 7.4-1.2 3 6.6 1 6.7-8 5.7-22.1 11.2-34.6 0-5.7-4.4-9.6-.8-7.4 5.5 5.5 16.5 26.7 13 41.2 5 3.7-2.1 7.1 2.7 2.6 6.4-18.1 12.6-27.1 12.8-35.3 8-10.2-4.1-11 7.2-5 11 6.7 4 23.8 1 36.4-7 5.4-4 5.6 2.3 2.2 4.8-14.9 12.9-20.8 16.3-36.3 14.2-7.7-.6-7.6 8.9-1.6 12.6 8.3 5.1 24.5-3.3 37-13.8 5.3-2.8 6.2 1.8 3.6 7.3a53.9 53.9 0 01-21.8 18c-7 2.7-13.6 2.3-18.3.7-5.8-2-6.5 4-3.3 9.4 1.9 3.3 9.8 4.3 18.4 1.3 8.6-3 17.8-10.2 24.1-18.5 5.5-4.9 4.9 1.6 2.3 6.2-12.6 20-24.2 27.4-39.5 26.2-6.7-1.2-8.3 4-4 9 7.6 6.2 17 6 25.4-.2 7.3-7 21.4-22.4 28.8-30.6 5.2-4.1 6.9 0 5.3 8.4-1.4 4.8-4.8 10-14.3 13.6-6.5 3.7-1.6 8.8 3.2 9 2.7 0 8.1-3.2 12.3-7.8 5.4-6.2 5.8-10.3 8.8-19.9 2.8-4.6 7.9-2.4 7.9 2.4-2.5 9.6-4.5 11.3-9.5 15.2-4.7 4.5 3.3 6 6 4.1 7.8-5.2 10.6-12 13.2-18.2 2-4.4 7.4-2.3 4.8 5-6 17.4-16 24.2-33.3 27.8-1.7.3-2.8 1.3-2.2 3.3l7 7c-10.7 3.2-19.4 5-30.2 8l-14.8-9.8c-1.3-3.2-2-8.2-9.8-4.7-5.2-2.4-7.7-1.5-10.6 1 4.2 0 6 1.2 7.7 3.1 2.2 5.7 7.2 6.3 12.3 4.7 3.3 2.7 5 4.9 8.4 7.7l-16.7-.5c-6-6.3-10.6-6-14.8-1-3.3.5-4.6.5-6.8 4.4 3.4-1.4 5.6-1.8 7.1-.3 6.3 3.7 10.4 2.9 13.5 0l17.5 1.1c-2.2 2-5.2 3-7.5 4.8-9-2.6-13.8 1-15.4 8.3a17 17 0 00-1.2 9.3c.8-3 2.3-5.5 4.9-7 8 2 11-1.3 11.5-6.1 4-3.2 9.8-3.9 13.7-7.1 4.6 1.4 6.8 2.3 11.4 3.8 1.6 5 5.3 6.9 11.3 5.6 7 .2 5.8 3.2 6.4 5.5 2-3.3 1.9-6.6-2.5-9.6-1.6-4.3-5.2-6.3-9.8-3.8-4.4-1.2-5.5-3-9.9-4.3 11-3.5 18.8-4.3 29.8-7.8l7.7 6.8c1.5.9 2.9 1.1 3.8 0 6.9-10 10-18.7 16.3-25.3 2.5-2.8 5.6-6.4 9-7.3 1.7-.5 3.8-.2 5.2 1.3 1.3 1.4 2.4 4.1 2 8.2-.7 5.7-2.1 7.6-3.7 11-1.7 3.5-3.6 5.6-5.7 8.3-4 5.3-9.4 8.4-12.6 10.5-6.4 4.1-9 2.3-14 2-6.4.7-8 3.8-2.8 8.1 4.8 2.6 9.2 2.9 12.8 2.2 3-.6 6.6-4.5 9.2-6.6 2.8-3.3 7.6.6 4.3 4.5-5.9 7-11.7 11.6-19 11.5-7.7 1-6.2 5.3-1.2 7.4 9.2 3.7 17.4-3.3 21.6-8 3.2-3.5 5.5-3.6 5 1.9-3.3 9.9-7.6 13.7-14.8 14.2-5.8-.6-5.9 4-1.6 7 9.6 6.6 16.6-4.8 19.9-11.6 2.3-6.2 5.9-3.3 6.3 1.8 0 6.9-3 12.4-11.3 19.4 6.3 10.1 13.7 20.4 20 30.5l19.2-214L320 139c-2-1.8-8.8-9.8-10.5-11-.7-.6-1-1-.1-1.4.9-.4 3-.8 4.5-1-4-4.1-7.6-5.4-15.3-7.6 1.9-.8 3.7-.4 9.3-.6a30.2 30.2 0 00-13.5-10.2c4.2-3 5-3.2 9.2-6.7a86.3 86.3 0 01-19.5-3.8 37.4 37.4 0 00-12-3.4zm.8 8.4c3.8 0 6.1 1.3 6.1 2.9 0 1.6-2.3 2.9-6.1 2.9s-6.2-1.5-6.2-3c0-1.6 2.4-2.8 6.2-2.8z" />
   <use width="100%" height="100%" transform="matrix(-1 0 0 1 640 0)" xlink:href="#flag-icon-css-al_a" />
@@ -501,7 +501,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;al&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-cn" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icon-css-cn" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <defs>
     <path id="flag-icon-css-cn_a" fill="#ffde00" d="M-.6.8L0-1 .6.8-1-.3h2z" />
   </defs>
@@ -516,7 +516,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;cn&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-es" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icon-css-es" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <path fill="#AA151B" d="M0 0h640v480H0z" />
   <path fill="#F1BF00" d="M0 120h640v240H0z" />
   <path fill="#ad1519" d="M127.3 213.3l-.8-.1-1-1-.7-.4-.6-.8s-.7-1.1-.4-2c.3-.9.9-1.2 1.4-1.5a12 12 0 011.5-.5l1-.4 1.3-.3.5-.3c.2 0 .7 0 1-.2l1-.2 1.6.1h4.8c.4 0 1.2.3 1.4.4a35 35 0 002 .7c.5.1 1.6.3 2.2.6.5.3.9.7 1.1 1l.5 1v1.1l-.5.8-.6 1-.8.6s-.5.5-1 .4c-.4 0-4.8-.8-7.6-.8s-7.3.9-7.3.9" />
@@ -1064,7 +1064,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;es&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icon-css-de" style="height:16px" width="640" height="480" viewBox="0 0 640 480">
+<li><svg id="flag-icon-css-de" role="img" style="height:16px" width="640" height="480" viewBox="0 0 640 480">
   <path fill="#ffce00" d="M0 320h640v160H0z" />
   <path d="M0 0h640v160H0z" />
   <path fill="#d00" d="M0 160h640v160H0z" />
@@ -1073,7 +1073,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;de&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icons-tr" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icons-tr" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <g fill-rule="evenodd">
     <path fill="#e30a17" d="M0 0h640v480H0z" />
     <path fill="#fff" d="M407 247.5c0 66.2-54.6 119.9-122 119.9s-122-53.7-122-120 54.6-119.8 122-119.8 122 53.7 122 119.9z" />
@@ -1085,13 +1085,13 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;tr&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="flag-icons-kr" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
+<li><svg id="flag-icons-kr" role="img" style="height:16px" viewBox="0 0 640 480" width="640" height="480">
   <defs>
     <clipPath id="flag-icons-kr_a">
       <path fill-opacity=".7" d="M-95.8-.4h682.7v512H-95.8z" />
     </clipPath>
   </defs>
-  <g fill-rule="evenodd" clip-path="url(#a)" transform="translate(89.8 .4) scale(.9375)">
+  <g fill-rule="evenodd" clip-path="url(#flag-icons-kr_a)" transform="translate(89.8 .4) scale(.9375)">
     <path fill="#fff" d="M-95.8-.4H587v512H-95.8Z" />
     <g transform="rotate(-56.3 361.6 -101.3) scale(10.66667)">
       <g id="flag-icons-kr_c">
@@ -1113,7 +1113,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;kr&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="svg_55b10f15941c2e8e8c8b" style="height:16px" width="640" height="400" viewBox="0 0 8 5">
+<li><svg id="svg_55b10f15941c2e8e8c8b" role="img" style="height:16px" width="640" height="400" viewBox="0 0 8 5">
 <rect width="8" height="5" fill="#dc143c" />
 <rect width="8" height="2.5" fill="#fff" />
 </svg> polish,
@@ -1121,7 +1121,7 @@ activate with:</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">set_i18n</span>(<span class="st">&quot;pl&quot;</span>)</span></code></pre></div>
 <ul>
-<li><svg id="svg_937ed19b69ad46a1a7e0" style="height:16px" width="900" height="600" viewBox="0 0 900 600">
+<li><svg id="svg_937ed19b69ad46a1a7e0" role="img" style="height:16px" width="900" height="600" viewBox="0 0 900 600">
 <rect fill="#fff" height="600" width="900" />
 <circle fill="#bc002d" cx="450" cy="300" r="180"></circle>
 </svg> japanese,

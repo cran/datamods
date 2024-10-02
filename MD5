@@ -1,6 +1,6 @@
-dde45df2a1c5010a8fb4a205c30dc2b4 *DESCRIPTION
+085fce7b04359e1585986bdd38edf661 *DESCRIPTION
 4e5c457e240ed64f879f58a1c6220a81 *NAMESPACE
-ee647f027b31f46f05b62f4b26c5979e *NEWS.md
+5ecf93dbed42f56ec02abadad0a46913 *NEWS.md
 78d86457dd451e1c09bec618b72136b4 *R/create-column.R
 dc7588b680c9b9f18792ecce9958072b *R/cut-variable.R
 e36f65cf9a35595fedc515bae6768a27 *R/data.R
@@ -20,7 +20,7 @@ af11a85231e12c609a7b18e957cb9534 *R/edit-data.R
 73dfea6d54e09e98288ea69637f37933 *R/select-group.R
 b22c4208fb74039f4cc4221926796dab *R/show_data.R
 f750e0f3ba8bf85898ae5a72945df767 *R/update-factor.R
-f4b30e706d9d5b4a1990add586823bdb *R/update-variables.R
+f9301a0ebb1085727882643ac608b014 *R/update-variables.R
 2d316175308aaa7936b5c1411c0114c1 *R/utils-shiny.R
 42cc8fdfe884d8d3e7b905293e86cbaf *R/utils.R
 35ccdfd09c19e16e7261a697c63cbc6b *R/validation.R
@@ -30,12 +30,12 @@ b75c4cba3ae20e4b039bc9662453709f *build/vignette.rds
 9aebdc7f82976fe4a1d752e1f0ca97e0 *data/demo_edit.rda
 6fabddd242c3956b35e05bd60b8efb5c *inst/assets/css/datamods.css
 a118fe92f239c7d54d2db2192e2a83e6 *inst/assets/js/datamods.js
-1dcf3a4e5f59c796e476196abcbfe446 *inst/doc/datamods.R
-e872e20bd7ab244b6aed66c49c96e983 *inst/doc/datamods.Rmd
-9a79535721889073da48db00348d8470 *inst/doc/datamods.html
-8cb6dc556632acb662cedf73a7df79cb *inst/doc/i18n.R
-64574382aefe1bdb942514a8e42e4fb3 *inst/doc/i18n.Rmd
-75a3623fb7c9eb59096647651fbe9b66 *inst/doc/i18n.html
+fd5a359e2487e78cf50cbb6d5d1ce3df *inst/doc/datamods.R
+eb4d9edfc8949c404f1dd160d1ea6fdb *inst/doc/datamods.Rmd
+fd80c15e1316977345b6d9d76e2b810c *inst/doc/datamods.html
+1e1b8d760ec2077067b8245f2c66f08d *inst/doc/i18n.R
+ad10d708c92ec1acedfd8389be631fae *inst/doc/i18n.Rmd
+c686c6e3954aa9792576f92f767b75e4 *inst/doc/i18n.html
 a99833f538af72039f98a04575558789 *inst/extdata/mtcars.csv
 1c1ea80a0665d7e7c6f09c2c86a604ba *inst/extdata/mtcars.dat
 a76f3e6fe44afa6a2533725659ba35a1 *inst/extdata/mtcars.json
@@ -96,7 +96,7 @@ a994db1c70bded43a6a7cdeb5edbda56 *man/import-copypaste.Rd
 0b2e9be262465b21c6e5c49e49cf9e13 *man/select-group.Rd
 901067a5ef53dc257dcc11ad717ebdcb *man/show_data.Rd
 42ffb7055f83038712d6909e33ffbee9 *man/update-factor.Rd
-27806d87f8ae85c4cf49dd5f901c60bc *man/update-variables.Rd
+b499bf5183221ab5f01e79eab842396a *man/update-variables.Rd
 fa36f5d51b01701b0c846a503c300f73 *man/validation.Rd
 784f9c35ab39df3803ae6bf8cdef9ac1 *tests/testthat.R
 ebc942ea286dd93cceb45891ea1d2132 *tests/testthat/test-edit-data.R
@@ -111,7 +111,7 @@ f05d3d4db53aaeaafee8098232dc191b *tests/testthat/test-import-file.R
 63d140913b042bbf856c3479b0f649aa *tests/testthat/test-onLoad.R
 bc80af8996270c7ede869a9a2e8f4aee *tests/testthat/test-update-variables.R
 e193436c5e22a269ffd2686905d7becd *tests/testthat/test-validation.R
-e872e20bd7ab244b6aed66c49c96e983 *vignettes/datamods.Rmd
+eb4d9edfc8949c404f1dd160d1ea6fdb *vignettes/datamods.Rmd
 d9a02cdef2a57db12e71f3493f513188 *vignettes/figures/datamods-edit-data.png
 9ccfe518f26f79b446c55b0376243df6 *vignettes/figures/datamods-env.png
 b7f5021fb7a8aed10b390b7594574d7f *vignettes/figures/datamods-file.png
@@ -135,4 +135,4 @@ ed091b887cafb2adbf04a411d7ac40fa *vignettes/figures/i18n/mk.svg
 aa3ad8a9daa8ec9d6018955708fe5737 *vignettes/figures/i18n/pl.svg
 b908edaecfb2ef51ac70b6bf7457ef2c *vignettes/figures/i18n/pt.svg
 4dd4b60c8a5e3dad5e65fdfa9745c03f *vignettes/figures/i18n/tr.svg
-64574382aefe1bdb942514a8e42e4fb3 *vignettes/i18n.Rmd
+ad10d708c92ec1acedfd8389be631fae *vignettes/i18n.Rmd
